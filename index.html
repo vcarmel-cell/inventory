@@ -30,6 +30,9 @@
   .btn.primary:hover{background:var(--clay-hover);}
   .btn.link{border:none;background:none;padding:4px 6px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px;}
   .btn.danger{color:var(--bad);}
+  .btn.sm{padding:6px 10px;font-size:13px;}
+  .lnk{background:none;border:none;padding:0;font:inherit;color:inherit;text-align:inherit;cursor:pointer;text-decoration:underline;text-decoration-color:var(--ink-grey);text-underline-offset:3px;}
+  .lnk:hover{color:var(--clay-hover);text-decoration-color:currentColor;}
   .hidden{display:none !important;}
 
   /* login */
@@ -43,18 +46,19 @@
 
   /* app */
   header{border-bottom:1px solid var(--hairline);background:var(--wash);}
-  .bar{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;}
+  .bar{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px;}
   .brand{height:46px;width:auto;display:block;}
   .who{margin-inline-start:auto;font-size:13px;color:var(--ink-soft);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   main{max-width:1120px;margin:0 auto;padding:18px 16px 40px;}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .tabs{display:flex;border-bottom:1px solid var(--hairline);margin-bottom:16px;overflow-x:auto;}
-  .tab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;cursor:pointer;color:var(--ink-soft);font-size:15px;}
+  .tab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;cursor:pointer;color:var(--ink-soft);font-size:15px;white-space:nowrap;}
   .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--clay);font-weight:600;}
-  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
   .card{background:var(--wash);border:1px solid var(--hairline);border-radius:4px;padding:12px 14px;}
   .card .k{font-size:12px;color:var(--ink-soft);}
   .card .v{font-size:20px;font-weight:700;margin-top:4px;}
+  .card .v.s{font-size:15px;}
   .card.alert .v{color:var(--bad);}
   .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
   .toolbar input,.toolbar select{width:auto;min-width:160px;flex:1 1 160px;max-width:280px;}
@@ -70,24 +74,37 @@
   td.num,th.num{text-align:left;direction:ltr;font-variant-numeric:tabular-nums;}
   td.wrap{white-space:normal;min-width:160px;}
   .sub{font-size:12px;color:var(--ink-grey);}
-  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:2px;}
+  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:2px;white-space:nowrap;}
   .tag.low{background:var(--bad-wash);color:var(--bad);}
   .tag.ok{background:var(--ok-wash);color:var(--ok);}
   .tag.in{background:var(--ok-wash);color:var(--ok);}
   .tag.out{background:var(--bad-wash);color:var(--bad);}
   .tag.transfer{background:#E8EEF4;color:#2F5677;}
   .tag.adjust{background:var(--warn-wash);color:var(--warn);}
+  .tag.rev{background:#EDECE8;color:var(--ink-soft);border:1px dashed var(--ink-grey);}
+  .tag.void{background:none;color:var(--ink-grey);border:1px solid var(--hairline);}
+  tr.void td.strike{text-decoration:line-through;color:var(--ink-grey);}
   tr.low td:first-child{box-shadow:inset -3px 0 0 var(--bad);}
   .empty{text-align:center;color:var(--ink-grey);padding:30px 10px;}
   .row-actions{display:flex;gap:2px;}
+  h3{font-size:15px;margin:18px 0 8px;}
 
-  dialog{border:1px solid var(--hairline);border-radius:6px;padding:0;width:min(460px,calc(100vw - 32px));color:var(--ink);}
+  dialog{border:1px solid var(--hairline);border-radius:6px;padding:0;width:min(460px,calc(100vw - 32px));max-height:calc(100dvh - 32px);color:var(--ink);}
+  dialog.wide{width:min(940px,calc(100vw - 32px));}
   dialog::backdrop{background:rgba(30,28,24,.35);}
   .dlg-head{padding:14px 18px;border-bottom:1px solid var(--hairline);font-weight:600;font-size:16px;background:var(--wash);}
   .dlg-body{padding:16px 18px;}
-  .dlg-foot{padding:12px 18px;border-top:1px solid var(--hairline);display:flex;gap:8px;justify-content:flex-start;}
+  .dlg-foot{padding:12px 18px;border-top:1px solid var(--hairline);display:flex;gap:8px;justify-content:flex-start;position:sticky;bottom:0;background:#fff;}
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 10px;}
   .hint{font-size:13px;color:var(--ink-soft);background:var(--wash);border-radius:3px;padding:8px 10px;margin-bottom:12px;}
+  .lines td{padding:6px 8px;vertical-align:middle;}
+  .lines input{padding:6px 8px;}
+  .lines .ln-item{min-width:200px;}
+  .lines .ln-qty,.lines .ln-cost,.lines .ln-count{width:100px;}
+  .doc-foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px;}
+  .doc-total{margin-inline-start:auto;font-weight:600;}
+  .card-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
 
   #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:4px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100vw - 32px);}
   #toast.show{opacity:1;}
@@ -97,11 +114,11 @@
     .grid2{grid-template-columns:1fr;}
     .toolbar input,.toolbar select{max-width:none;}
     .actions .btn{flex:1 1 calc(50% - 8px);}
+    .brand{height:38px;}
   }
 </style>
 </head>
 <body>
-
 
 <!-- Login -->
 <section id="login" class="hidden">
@@ -121,21 +138,23 @@
   <header><div class="bar">
     <img class="brand" src="brand-logo.png" alt="Next1 מלאי">
     <span class="who" id="who"></span>
+    <button class="btn" id="backupBtn" title="הורדת גיבוי מלא של כל הנתונים לאקסל">גיבוי</button>
     <button class="btn" id="logoutBtn">יציאה</button>
   </div></header>
 
   <main>
     <div class="actions">
-      <button class="btn primary" data-move="in">קבלה למלאי</button>
-      <button class="btn" data-move="out">הוצאה מהמלאי</button>
-      <button class="btn" data-move="transfer">העברה בין מחסנים</button>
-      <button class="btn" data-move="adjust">ספירת מלאי</button>
+      <button class="btn primary" data-doc="in">קבלה למלאי</button>
+      <button class="btn" data-doc="out">הוצאה מהמלאי</button>
+      <button class="btn" data-doc="transfer">העברה בין מחסנים</button>
+      <button class="btn" data-doc="adjust">ספירת מלאי</button>
     </div>
 
     <div class="tabs" role="tablist">
       <button class="tab" role="tab" data-tab="stock" aria-selected="true">מלאי</button>
       <button class="tab" role="tab" data-tab="items" aria-selected="false">פריטים</button>
       <button class="tab" role="tab" data-tab="whs" aria-selected="false">מחסנים</button>
+      <button class="tab" role="tab" data-tab="sups" aria-selected="false">ספקים</button>
       <button class="tab" role="tab" data-tab="moves" aria-selected="false">תנועות</button>
     </div>
 
@@ -152,6 +171,7 @@
         <input id="sSearch" type="search" placeholder="חיפוש פריט / מק״ט / קטגוריה" aria-label="חיפוש">
         <label style="display:flex;gap:6px;align-items:center;font-size:13px;white-space:nowrap"><input type="checkbox" id="sLow" style="width:auto">רק מתחת למינימום</label>
         <span class="sp"></span>
+        <button class="btn" id="asOfBtn">דוח מלאי לתאריך</button>
         <button class="btn" id="exportStockBtn">ייצוא לאקסל</button>
       </div>
       <div class="tbl-wrap"><table>
@@ -171,7 +191,7 @@
         <button class="btn primary" id="addItemBtn">פריט חדש</button>
       </div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>פריט</th><th>מק״ט</th><th>קטגוריה</th><th>יחידה</th><th class="num">מינימום</th><th class="num">עלות ממוצעת</th><th class="num">סה״כ כמות</th><th></th></tr></thead>
+        <thead><tr><th>פריט</th><th>מק״ט</th><th>קטגוריה</th><th>יחידה</th><th class="num">מינימום</th><th class="num">עלות ממוצעת</th><th class="num">מחיר קנייה אחרון</th><th class="num">סה״כ כמות</th><th></th></tr></thead>
         <tbody id="itemsBody"></tbody>
       </table></div>
     </section>
@@ -182,6 +202,18 @@
       <div class="tbl-wrap"><table>
         <thead><tr><th>מחסן</th><th>מיקום / הערה</th><th class="num">פריטים</th><th class="num">שווי</th><th></th></tr></thead>
         <tbody id="whsBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- Suppliers -->
+    <section id="tab-sups" role="tabpanel" class="hidden">
+      <div class="toolbar">
+        <input id="supSearch" type="search" placeholder="חיפוש ספק" aria-label="חיפוש ספק">
+        <span class="sp"></span><button class="btn primary" id="addSupBtn">ספק חדש</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>ספק</th><th>איש קשר</th><th>טלפון</th><th>אימייל</th><th>הערה</th><th></th></tr></thead>
+        <tbody id="supsBody"></tbody>
       </table></div>
     </section>
 
@@ -197,16 +229,16 @@
         </select>
         <label class="dt">מתאריך<input id="mFrom" type="date"></label>
         <label class="dt">עד<input id="mTo" type="date"></label>
-        <input id="mSearch" type="search" placeholder="חיפוש פריט / הערה" aria-label="חיפוש תנועה">
+        <input id="mSearch" type="search" placeholder="חיפוש פריט / ספק / אסמכתא" aria-label="חיפוש תנועה">
         <span class="sp"></span>
         <button class="btn" id="exportMovesBtn">ייצוא לאקסל</button>
       </div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>תאריך</th><th>סוג</th><th>פריט</th><th>מחסן</th><th class="num">כמות</th><th class="num">עלות ליח׳</th><th class="num">שווי</th><th>הערה</th></tr></thead>
+        <thead><tr><th>תאריך</th><th>סוג</th><th>פריט</th><th>מחסן</th><th class="num">כמות</th><th class="num">עלות ליח׳</th><th class="num">שווי</th><th>פרטים</th><th></th></tr></thead>
         <tbody id="movesBody"></tbody>
       </table></div>
       <p class="sub" id="mNote"></p>
-      <p class="sub">תנועות אינן נמחקות — תיקון מבצעים בספירת מלאי. הייצוא לאקסל כולל את התנועות בסינון הנוכחי, וגיליון סיכום לפי פריט לתקופה.</p>
+      <p class="sub">תנועה שגויה מבטלים בכפתור "ביטול": נוצרת תנועה הפוכה והמקורית מסומנת כמבוטלת, כך שההיסטוריה נשמרת. הייצוא לאקסל כולל את התנועות בסינון הנוכחי, סיכום לפי פריט וקניות לפי ספק.</p>
     </section>
   </main>
 
@@ -224,7 +256,7 @@
   <div class="err" id="dlgErr" role="alert" style="padding:0 18px"></div>
   <div class="dlg-foot">
     <button class="btn primary" id="dlgOk" value="ok">שמירה</button>
-    <button class="btn" value="cancel" formnovalidate>ביטול</button>
+    <button class="btn" id="dlgCancel" value="cancel" formnovalidate>ביטול</button>
   </div>
 </form></dialog>
 
@@ -247,27 +279,34 @@ const TS = () => firebase.firestore.FieldValue.serverTimestamp();
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const r6 = n => Math.round(n * 1e6) / 1e6;
+const money = n => Math.round((n || 0) * 100) / 100;
 const fmtN = n => (Math.round((n || 0) * 1000) / 1000).toLocaleString('he-IL');
 const fmtM = n => '₪' + (n || 0).toLocaleString('he-IL', {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const today = () => new Date().toLocaleDateString('en-CA');
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dmy = s => (s || '').split('-').reverse().join('/');
 const TYPE_LABEL = {in: 'קבלה', out: 'הוצאה', transfer: 'העברה', adjust: 'ספירה'};
+const DOC_TITLE = {in: 'קבלה למלאי', out: 'הוצאה מהמלאי', transfer: 'העברה בין מחסנים', adjust: 'ספירת מלאי'};
+const MAX_LINES = 150;
 
 let uid = null, userEmail = '';
-let items = {}, whs = {}, stock = {}, moves = [];
+let items = {}, whs = {}, stock = {}, suppliers = {}, moves = [];
+const moveCache = {};
 let unsubs = [];
 
 const U = () => db.collection('users').doc(uid);
+const col = name => U().collection(name);
 const stockId = (itemId, whId) => itemId + '__' + whId;
-const stockRef = (itemId, whId) => U().collection('stock').doc(stockId(itemId, whId));
 
 function toast(msg) {
   const t = $('toast'); t.textContent = msg; t.classList.add('show');
-  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 /* ---------- Auth ---------- */
 auth.onAuthStateChanged(user => {
-  unsubs.forEach(u => u()); unsubs = [];
+  unsubs.forEach(u => u()); unsubs = []; unsubMoves = null;
   if (!user) {
     uid = null; $('app').classList.add('hidden'); $('login').classList.remove('hidden'); return;
   }
@@ -293,14 +332,17 @@ $('logoutBtn').addEventListener('click', () => auth.signOut());
 /* ---------- Data ---------- */
 function listen() {
   const err = e => { console.error(e); toast('שגיאת חיבור לנתונים'); };
-  unsubs.push(U().collection('items').onSnapshot(s => {
+  unsubs.push(col('items').onSnapshot(s => {
     items = {}; s.forEach(d => items[d.id] = {id: d.id, ...d.data()}); renderAll();
   }, err));
-  unsubs.push(U().collection('warehouses').onSnapshot(s => {
+  unsubs.push(col('warehouses').onSnapshot(s => {
     whs = {}; s.forEach(d => whs[d.id] = {id: d.id, ...d.data()}); renderWhSelects(); renderAll();
   }, err));
-  unsubs.push(U().collection('stock').onSnapshot(s => {
+  unsubs.push(col('stock').onSnapshot(s => {
     stock = {}; s.forEach(d => stock[d.id] = d.data()); renderAll();
+  }, err));
+  unsubs.push(col('suppliers').onSnapshot(s => {
+    suppliers = {}; s.forEach(d => suppliers[d.id] = {id: d.id, ...d.data()}); renderSuppliers();
   }, err));
   listenMoves();
 }
@@ -308,11 +350,12 @@ function listen() {
 /* Movements: no date range → latest MOVES_LIMIT; with a range → everything in it */
 const MOVES_LIMIT = 1000;
 let unsubMoves = null;
-const byDateDesc = (a, b) => (b.date || '').localeCompare(a.date || '') ||
-  ((b.at && b.at.seconds) || 9e12) - ((a.at && a.at.seconds) || 9e12);
+const atSec = m => (m.at && m.at.seconds) || 9e12;
+const byDateDesc = (a, b) => (b.date || '').localeCompare(a.date || '') || atSec(b) - atSec(a);
+const byDateAsc = (a, b) => (a.date || '').localeCompare(b.date || '') || atSec(a) - atSec(b);
 function movesQuery() {
   const from = $('mFrom').value, to = $('mTo').value;
-  let q = U().collection('movements');
+  let q = col('movements');
   if (!from && !to) return q.orderBy('at', 'desc').limit(MOVES_LIMIT);
   if (from) q = q.where('date', '>=', from);
   if (to) q = q.where('date', '<=', to);
@@ -321,13 +364,11 @@ function movesQuery() {
 function listenMoves() {
   if (unsubMoves) { unsubMoves(); unsubs = unsubs.filter(u => u !== unsubMoves); }
   unsubMoves = movesQuery().onSnapshot(s => {
-    moves = []; s.forEach(d => moves.push({id: d.id, ...d.data()})); moves.sort(byDateDesc); renderMoves();
+    moves = []; s.forEach(d => { const m = {id: d.id, ...d.data()}; moves.push(m); moveCache[m.id] = m; });
+    moves.sort(byDateDesc); renderMoves();
   }, e => { console.error(e); toast('שגיאה בטעינת תנועות'); });
   unsubs.push(unsubMoves);
 }
-const pad = n => String(n).padStart(2, '0');
-const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const dmy = s => s.split('-').reverse().join('/');
 function applyRange() {
   const r = $('mRange').value, d = new Date(), y = d.getFullYear(), mo = d.getMonth();
   const set = (a, b) => { $('mFrom').value = a; $('mTo').value = b; };
@@ -341,8 +382,17 @@ function applyRange() {
 
 const sortedItems = () => Object.values(items).sort((a, b) => a.name.localeCompare(b.name, 'he'));
 const sortedWhs = () => Object.values(whs).sort((a, b) => a.name.localeCompare(b.name, 'he'));
+const sortedSups = () => Object.values(suppliers).sort((a, b) => a.name.localeCompare(b.name, 'he'));
 const qtyIn = (itemId, whId) => (stock[stockId(itemId, whId)] || {}).qty || 0;
 const isLow = it => (it.minQty || 0) > 0 && (it.totalQty || 0) < it.minQty;
+const itemLabel = it => it.name + (it.sku ? ` · ${it.sku}` : '');
+function resolveItem(text) {
+  const t = text.trim(); if (!t) return null;
+  const all = Object.values(items);
+  return all.find(it => itemLabel(it) === t) || all.find(it => it.sku && it.sku === t) ||
+    (all.filter(it => it.name === t).length === 1 ? all.find(it => it.name === t) : null);
+}
+const supplierByName = name => Object.values(suppliers).find(s => s.name.trim().toLowerCase() === name.trim().toLowerCase());
 
 /* ---------- Render ---------- */
 function renderAll() { renderStock(); renderItems(); renderWhs(); renderMoves(); }
@@ -394,7 +444,7 @@ function renderStock() {
       else if (parts.length === 1) breakdown = `<div class="sub">${esc(parts[0][0].name)}</div>`;
     }
     return `<tr class="${low ? 'low' : ''}">
-      <td class="wrap">${esc(it.name)}${breakdown}</td><td>${esc(it.sku)}</td><td>${esc(it.category)}</td>
+      <td class="wrap"><button type="button" class="lnk" data-card="${it.id}">${esc(it.name)}</button>${breakdown}</td><td>${esc(it.sku)}</td><td>${esc(it.category)}</td>
       <td class="num">${fmtN(qty)}</td><td>${esc(it.unit)}</td>
       <td class="num">${fmtM(it.avgCost)}</td><td class="num">${fmtM(value)}</td>
       <td>${low ? `<span class="tag low">חסר · מינ׳ ${fmtN(it.minQty)}</span>` : (it.minQty ? '<span class="tag ok">תקין</span>' : '')}</td></tr>`;
@@ -404,10 +454,11 @@ function renderStock() {
 function renderItems() {
   const q = $('iSearch').value.trim().toLowerCase();
   const list = sortedItems().filter(it => !q || `${it.name} ${it.sku || ''} ${it.category || ''}`.toLowerCase().includes(q));
-  if (!list.length) { $('itemsBody').innerHTML = `<tr><td colspan="8" class="empty">${q ? 'אין פריטים תואמים' : 'אין פריטים עדיין'}</td></tr>`; return; }
+  if (!list.length) { $('itemsBody').innerHTML = `<tr><td colspan="9" class="empty">${q ? 'אין פריטים תואמים' : 'אין פריטים עדיין'}</td></tr>`; return; }
   $('itemsBody').innerHTML = list.map(it => `<tr>
-    <td class="wrap">${esc(it.name)}</td><td>${esc(it.sku)}</td><td>${esc(it.category)}</td><td>${esc(it.unit)}</td>
-    <td class="num">${it.minQty ? fmtN(it.minQty) : ''}</td><td class="num">${fmtM(it.avgCost)}</td><td class="num">${fmtN(it.totalQty)}</td>
+    <td class="wrap"><button type="button" class="lnk" data-card="${it.id}">${esc(it.name)}</button></td><td>${esc(it.sku)}</td><td>${esc(it.category)}</td><td>${esc(it.unit)}</td>
+    <td class="num">${it.minQty ? fmtN(it.minQty) : ''}</td><td class="num">${fmtM(it.avgCost)}</td>
+    <td class="num">${it.lastCost != null ? fmtM(it.lastCost) : ''}</td><td class="num">${fmtN(it.totalQty)}</td>
     <td><div class="row-actions"><button class="btn link" data-edit-item="${it.id}">עריכה</button><button class="btn link danger" data-del-item="${it.id}">מחיקה</button></div></td></tr>`).join('');
 }
 
@@ -422,29 +473,53 @@ function renderWhs() {
   }).join('');
 }
 
+function renderSuppliers() {
+  const q = $('supSearch').value.trim().toLowerCase();
+  const list = sortedSups().filter(s => !q || `${s.name} ${s.contact || ''} ${s.phone || ''}`.toLowerCase().includes(q));
+  if (!list.length) { $('supsBody').innerHTML = `<tr><td colspan="6" class="empty">${q ? 'אין ספקים תואמים' : 'אין ספקים עדיין. ספק נוסף גם אוטומטית כשמקלידים שם חדש בקבלה למלאי.'}</td></tr>`; return; }
+  $('supsBody').innerHTML = list.map(s => `<tr>
+    <td><button type="button" class="lnk" data-sup-card="${s.id}">${esc(s.name)}</button></td><td>${esc(s.contact)}</td>
+    <td>${s.phone ? `<a href="tel:${esc(s.phone)}">${esc(s.phone)}</a>` : ''}</td>
+    <td>${s.email ? `<a href="mailto:${esc(s.email)}">${esc(s.email)}</a>` : ''}</td><td class="wrap">${esc(s.note)}</td>
+    <td><div class="row-actions"><button class="btn link" data-sup-card="${s.id}">קניות</button><button class="btn link" data-edit-sup="${s.id}">עריכה</button><button class="btn link danger" data-del-sup="${s.id}">מחיקה</button></div></td></tr>`).join('');
+}
+
 function moveWhText(m) {
   if (m.type === 'transfer') return `${esc(m.whName)} ← ${esc(m.toName)}`;
   return esc(m.whName);
 }
+const moveQty = m => m.type === 'out' ? -m.qty : m.qty;  // signed effect on stock
+const moveValue = m => moveQty(m) * (m.unitCost || 0);
+const moveDetailsHtml = m => [esc(m.supplierName), m.ref ? `אסמכתא <bdi>${esc(m.ref)}</bdi>` : '', esc(m.note)].filter(Boolean).join(' · ');
+function moveTag(m) {
+  if (m.reversalOf) return `<span class="tag rev">ביטול ${TYPE_LABEL[m.type]}</span>`;
+  return `<span class="tag ${m.type}">${TYPE_LABEL[m.type]}</span>` + (m.cancelled ? ' <span class="tag void">בוטלה</span>' : '');
+}
+// card=true → item card layout (no item column, adds avg-after column)
+function moveRow(m, card) {
+  const q = moveQty(m);
+  const qtyTxt = (q > 0 && (m.type === 'adjust' || m.reversalOf) ? '+' : '') + fmtN(q) +
+    (m.type === 'adjust' ? `<div class="sub">${fmtN(m.before)} → ${fmtN(m.counted)}</div>` : '');
+  const action = !m.cancelled && !m.reversalOf ? `<button class="btn link danger" data-cancel="${m.id}">ביטול</button>` : '';
+  return `<tr class="${m.cancelled ? 'void' : ''}"><td class="strike">${dmy(m.date)}</td><td>${moveTag(m)}</td>
+    ${card ? '' : `<td class="wrap strike"><button type="button" class="lnk" data-card="${m.itemId}">${esc(m.itemName)}</button></td>`}
+    <td class="strike">${moveWhText(m)}</td><td class="num strike">${qtyTxt}</td>
+    <td class="num strike">${fmtM(m.unitCost)}</td><td class="num strike">${fmtM(Math.abs(moveValue(m)))}</td>
+    ${card ? `<td class="num">${m.avgAfter != null ? fmtM(m.avgAfter) : ''}</td>` : ''}
+    <td class="wrap strike">${moveDetailsHtml(m)}</td><td>${action}</td></tr>`;
+}
 function filteredMoves() {
   const t = $('mType').value, wh = $('mWh').value, q = $('mSearch').value.trim().toLowerCase();
   return moves.filter(m => (!t || m.type === t) && (!wh || m.whId === wh || m.toId === wh) &&
-    (!q || `${m.itemName} ${m.sku || ''} ${m.note || ''}`.toLowerCase().includes(q)));
+    (!q || `${m.itemName} ${m.sku || ''} ${m.note || ''} ${m.supplierName || ''} ${m.ref || ''}`.toLowerCase().includes(q)));
 }
 function renderMoves() {
   const list = filteredMoves(), from = $('mFrom').value, to = $('mTo').value;
   $('mNote').textContent = (from || to)
     ? `${list.length.toLocaleString('he-IL')} תנועות${from ? ' מ־' + dmy(from) : ''}${to ? ' עד ' + dmy(to) : ''}`
     : `מוצגות עד ${MOVES_LIMIT.toLocaleString('he-IL')} התנועות האחרונות. לתקופה מסוימת — בחר טווח תאריכים.`;
-  if (!list.length) { $('movesBody').innerHTML = '<tr><td colspan="8" class="empty">אין תנועות</td></tr>'; return; }
-  $('movesBody').innerHTML = list.map(m => {
-    const sign = m.type === 'out' ? -1 : 1;
-    const qty = m.qty * sign;
-    const qtyTxt = m.type === 'adjust' ? `${qty > 0 ? '+' : ''}${fmtN(qty)}<div class="sub">${fmtN(m.before)} → ${fmtN(m.counted)}</div>` : fmtN(qty);
-    return `<tr><td>${esc(m.date)}</td><td><span class="tag ${m.type}">${TYPE_LABEL[m.type]}</span></td>
-      <td class="wrap">${esc(m.itemName)}</td><td>${moveWhText(m)}</td><td class="num">${qtyTxt}</td>
-      <td class="num">${fmtM(m.unitCost)}</td><td class="num">${fmtM(Math.abs(m.qty * m.unitCost))}</td><td class="wrap">${esc(m.note)}</td></tr>`;
-  }).join('');
+  if (!list.length) { $('movesBody').innerHTML = '<tr><td colspan="9" class="empty">אין תנועות</td></tr>'; return; }
+  $('movesBody').innerHTML = list.map(m => moveRow(m, false)).join('');
 }
 
 /* ---------- Tabs / filters ---------- */
@@ -454,6 +529,7 @@ document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () =>
 }));
 ['sWh', 'sSearch', 'sLow'].forEach(id => $(id).addEventListener('input', renderStock));
 $('iSearch').addEventListener('input', renderItems);
+$('supSearch').addEventListener('input', renderSuppliers);
 ['mType', 'mWh', 'mSearch'].forEach(id => $(id).addEventListener('input', renderMoves));
 $('mRange').addEventListener('change', applyRange);
 ['mFrom', 'mTo'].forEach(id => $(id).addEventListener('change', () => {
@@ -464,23 +540,43 @@ $('mRange').addEventListener('change', applyRange);
 
 /* ---------- Dialog ---------- */
 let dlgSubmit = null;
-function openDlg(title, html, onSubmit, okLabel = 'שמירה') {
+function openDlg(title, html, onSubmit, okLabel = 'שמירה', opts = {}) {
   $('dlgTitle').textContent = title; $('dlgBody').innerHTML = html; $('dlgErr').textContent = '';
   $('dlgOk').textContent = okLabel; dlgSubmit = onSubmit;
-  $('dlg').showModal();
-  const first = $('dlgBody').querySelector('input,select'); if (first) first.focus();
+  $('dlgCancel').textContent = opts.cancelLabel || 'ביטול';
+  $('dlgCancel').classList.toggle('hidden', !!opts.noCancel);
+  $('dlg').classList.toggle('wide', !!opts.wide);
+  if (!$('dlg').open) $('dlg').showModal();
+  $('dlgBody').scrollTop = 0;
+  const first = $('dlgBody').querySelector('input:not([type=hidden]),select'); if (first) first.focus();
 }
 $('dlgForm').addEventListener('submit', async e => {
   if (e.submitter && e.submitter.value === 'cancel') return;
   e.preventDefault();
   $('dlgOk').disabled = true;
-  try { await dlgSubmit(); $('dlg').close(); }
+  try { if (await dlgSubmit() !== false) $('dlg').close(); }
   catch (err) { console.error(err); $('dlgErr').textContent = err.message || 'שגיאה'; }
   finally { $('dlgOk').disabled = false; }
 });
 const val = id => $(id).value.trim();
 const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v; };
 const field = (id, label, input) => `<div class="field"><label for="${id}">${label}</label>${input}</div>`;
+
+/* Shared click handling for elements that appear in several places (tables, dialogs) */
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const d = b.dataset;
+  if (d.card) openCard(d.card);
+  else if (d.doc) openDoc(d.doc, d.item);
+  else if (d.cancel) cancelMove(d.cancel);
+  else if (d.editItem) editItem(d.editItem);
+  else if (d.delItem) delItem(d.delItem);
+  else if (d.editWh) editWh(d.editWh);
+  else if (d.delWh) delWh(d.delWh);
+  else if (d.editSup) editSupplier(d.editSup);
+  else if (d.delSup) delSupplier(d.delSup);
+  else if (d.supCard) openSupplierCard(d.supCard);
+});
 
 /* ---------- Warehouses ---------- */
 function editWh(id) {
@@ -492,9 +588,8 @@ function editWh(id) {
       const name = val('fWhName');
       if (Object.values(whs).some(x => x.id !== id && x.name === name)) throw new Error('כבר קיים מחסן בשם הזה');
       const data = {name, note: val('fWhNote')};
-      if (id) {
-        await U().collection('warehouses').doc(id).update(data);
-      } else await U().collection('warehouses').add({...data, createdAt: TS()});
+      if (id) await col('warehouses').doc(id).update(data);
+      else await col('warehouses').add({...data, createdAt: TS()});
       toast('המחסן נשמר');
     });
 }
@@ -503,16 +598,11 @@ async function delWh(id) {
   if (has) { toast('יש מלאי במחסן — יש להעביר או לאפס אותו לפני מחיקה'); return; }
   if (!confirm(`למחוק את המחסן "${whs[id].name}"?`)) return;
   const batch = db.batch();
-  Object.keys(stock).filter(k => k.endsWith('__' + id)).forEach(k => batch.delete(U().collection('stock').doc(k)));
-  batch.delete(U().collection('warehouses').doc(id));
+  Object.keys(stock).filter(k => k.endsWith('__' + id)).forEach(k => batch.delete(col('stock').doc(k)));
+  batch.delete(col('warehouses').doc(id));
   await batch.commit(); toast('המחסן נמחק');
 }
 $('addWhBtn').addEventListener('click', () => editWh(null));
-$('whsBody').addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.editWh) editWh(b.dataset.editWh);
-  if (b.dataset.delWh) delWh(b.dataset.delWh);
-});
 
 /* ---------- Items ---------- */
 function editItem(id) {
@@ -520,7 +610,7 @@ function editItem(id) {
   openDlg(id ? 'עריכת פריט' : 'פריט חדש',
     field('fName', 'שם הפריט', `<input id="fName" required value="${esc(it.name)}">`) +
     `<div class="grid2">` +
-    field('fSku', 'מק״ט', `<input id="fSku" value="${esc(it.sku)}">`) +
+    field('fSku', 'מק״ט / ברקוד', `<input id="fSku" value="${esc(it.sku)}">`) +
     field('fCat', 'קטגוריה', `<input id="fCat" value="${esc(it.category)}" list="catList"><datalist id="catList">${[...new Set(Object.values(items).map(x => x.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('')}</datalist>`) +
     field('fUnit', 'יחידת מידה', `<input id="fUnit" value="${esc(it.unit)}" placeholder="יח׳ / ק״ג / מטר">`) +
     field('fMin', 'כמות מינימום (התראה)', `<input id="fMin" type="number" step="any" min="0" value="${it.minQty || ''}">`) +
@@ -529,8 +619,8 @@ function editItem(id) {
     async () => {
       const data = {name: val('fName'), sku: val('fSku'), category: val('fCat'), unit: val('fUnit'), minQty: num('fMin')};
       if (data.sku && Object.values(items).some(x => x.id !== id && x.sku === data.sku)) throw new Error('מק״ט כבר קיים בפריט אחר');
-      if (id) { data.avgCost = num('fAvg'); await U().collection('items').doc(id).update(data); }
-      else await U().collection('items').add({...data, avgCost: 0, totalQty: 0, createdAt: TS()});
+      if (id) { data.avgCost = num('fAvg'); await col('items').doc(id).update(data); }
+      else await col('items').add({...data, avgCost: 0, totalQty: 0, createdAt: TS()});
       toast('הפריט נשמר');
     });
 }
@@ -539,119 +629,371 @@ async function delItem(id) {
   if ((it.totalQty || 0) !== 0) { toast('לפריט יש מלאי — יש לאפס אותו בספירה לפני מחיקה'); return; }
   if (!confirm(`למחוק את הפריט "${it.name}"? היסטוריית התנועות תישמר.`)) return;
   const batch = db.batch();
-  Object.keys(stock).filter(k => k.startsWith(id + '__')).forEach(k => batch.delete(U().collection('stock').doc(k)));
-  batch.delete(U().collection('items').doc(id));
+  Object.keys(stock).filter(k => k.startsWith(id + '__')).forEach(k => batch.delete(col('stock').doc(k)));
+  batch.delete(col('items').doc(id));
   await batch.commit(); toast('הפריט נמחק');
 }
 $('addItemBtn').addEventListener('click', () => editItem(null));
-$('itemsBody').addEventListener('click', e => {
-  const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.editItem) editItem(b.dataset.editItem);
-  if (b.dataset.delItem) delItem(b.dataset.delItem);
-});
 
-/* ---------- Movements ---------- */
-async function doMove(m) {
-  const itemRef = U().collection('items').doc(m.itemId);
+/* ---------- Suppliers ---------- */
+function editSupplier(id) {
+  const s = id ? suppliers[id] : {};
+  openDlg(id ? 'עריכת ספק' : 'ספק חדש',
+    field('fsName', 'שם הספק', `<input id="fsName" required value="${esc(s.name)}">`) +
+    `<div class="grid2">` +
+    field('fsContact', 'איש קשר', `<input id="fsContact" value="${esc(s.contact)}">`) +
+    field('fsPhone', 'טלפון', `<input id="fsPhone" type="tel" value="${esc(s.phone)}">`) +
+    `</div>` +
+    field('fsEmail', 'אימייל', `<input id="fsEmail" type="email" value="${esc(s.email)}">`) +
+    field('fsNote', 'הערה', `<input id="fsNote" value="${esc(s.note)}">`),
+    async () => {
+      const data = {name: val('fsName'), contact: val('fsContact'), phone: val('fsPhone'), email: val('fsEmail'), note: val('fsNote')};
+      const dup = supplierByName(data.name);
+      if (dup && dup.id !== id) throw new Error('כבר קיים ספק בשם הזה');
+      if (id) await col('suppliers').doc(id).update(data);
+      else await col('suppliers').add({...data, createdAt: TS()});
+      toast('הספק נשמר');
+    });
+}
+async function delSupplier(id) {
+  if (!confirm(`למחוק את הספק "${suppliers[id].name}"? הקבלות הקיימות יישארו עם שם הספק.`)) return;
+  await col('suppliers').doc(id).delete(); toast('הספק נמחק');
+}
+async function ensureSupplier(name) {
+  if (!name) return null;
+  const s = supplierByName(name);
+  if (s) return s;
+  const ref = await col('suppliers').add({name, contact: '', phone: '', email: '', note: '', createdAt: TS()});
+  return {id: ref.id, name};
+}
+async function openSupplierCard(id) {
+  const s = suppliers[id];
+  openDlg(s.name, `<div class="hint">${[s.contact, s.phone, s.email].filter(Boolean).map(esc).join(' · ') || 'אין פרטי קשר'}</div>
+    <div class="cards" id="supCards"></div><h3>קבלות מהספק</h3><div id="supDocs" class="sub">טוען…</div>`,
+    async () => {}, 'סגירה', {wide: true, noCancel: true});
+  const snap = await col('movements').where('supplierId', '==', id).get();
+  const list = snap.docs.map(d => ({id: d.id, ...d.data()})).filter(m => m.type === 'in').sort(byDateDesc);
+  const docs = {};
+  for (const m of list) {
+    const k = m.docId || m.id;
+    const d = docs[k] ||= {date: m.date, ref: m.ref || '', wh: m.whName, lines: 0, value: 0, rev: false};
+    d.lines++; d.value += moveValue(m); if (m.reversalOf) d.rev = true;
+  }
+  const y = String(new Date().getFullYear());
+  const yearV = list.filter(m => m.date.startsWith(y)).reduce((a, m) => a + moveValue(m), 0);
+  const allV = list.reduce((a, m) => a + moveValue(m), 0);
+  $('supCards').innerHTML = `<div class="card"><div class="k">קניות ${y}</div><div class="v">${fmtM(yearV)}</div></div>
+    <div class="card"><div class="k">סה״כ קניות</div><div class="v">${fmtM(allV)}</div></div>
+    <div class="card"><div class="k">קבלות</div><div class="v">${Object.keys(docs).length}</div></div>`;
+  const rows = Object.values(docs);
+  $('supDocs').outerHTML = rows.length ? `<div class="tbl-wrap"><table><thead><tr><th>תאריך</th><th>אסמכתא</th><th>מחסן</th><th class="num">שורות</th><th class="num">שווי</th></tr></thead><tbody>` +
+    rows.map(d => `<tr><td>${dmy(d.date)}</td><td><bdi>${esc(d.ref)}</bdi>${d.rev ? ' <span class="tag rev">כולל ביטול</span>' : ''}</td><td>${esc(d.wh)}</td><td class="num">${d.lines}</td><td class="num">${fmtM(d.value)}</td></tr>`).join('') +
+    `</tbody></table></div>` : '<p class="sub">אין עדיין קבלות מהספק הזה.</p>';
+}
+$('addSupBtn').addEventListener('click', () => editSupplier(null));
+
+/* ---------- Movement engine ----------
+   Applies a list of lines in one transaction. Quantities are signed:
+   a negative line is the reversal of a positive one (used for cancellations). */
+function addIn(it, q, cost) {
+  const base = Math.max(0, it.totalQty || 0), n = base + q, avg = it.avgCost || 0;
+  if (q > 0) it.avgCost = n > 0 ? (base * avg + q * cost) / n : cost;
+  else if (n > 1e-9) it.avgCost = Math.max(0, (base * avg + q * cost) / n);
+  it.totalQty = r6((it.totalQty || 0) + q);
+}
+async function commit(lines, hdr, docId = lines.length > 1 ? col('movements').doc().id : null) {
   await db.runTransaction(async t => {
-    const itS = await t.get(itemRef);
-    if (!itS.exists) throw new Error('הפריט לא נמצא');
-    const it = itS.data();
-    const sRef = stockRef(m.itemId, m.whId);
-    const sS = await t.get(sRef);
-    const cur = sS.exists ? sS.data().qty || 0 : 0;
-    let toRef, toCur = 0;
-    if (m.type === 'transfer') {
-      toRef = stockRef(m.itemId, m.toId);
-      const tS = await t.get(toRef); toCur = tS.exists ? tS.data().qty || 0 : 0;
+    const its = {}, st = {};
+    for (const id of new Set(lines.map(l => l.itemId))) {
+      const s = await t.get(col('items').doc(id));
+      if (!s.exists) throw new Error('פריט לא נמצא — ייתכן שנמחק');
+      its[id] = {...s.data()};
     }
-    let total = it.totalQty || 0, avg = it.avgCost || 0;
-    const rec = {
-      type: m.type, itemId: m.itemId, itemName: it.name, sku: it.sku || '',
-      whId: m.whId, whName: whs[m.whId].name, qty: m.qty, note: m.note || '',
-      date: m.date, at: TS(), by: userEmail
-    };
-    if (m.type === 'in') {
-      const base = Math.max(0, total);
-      avg = base + m.qty > 0 ? (base * avg + m.qty * m.unitCost) / (base + m.qty) : m.unitCost;
-      total += m.qty;
-      t.set(sRef, {itemId: m.itemId, whId: m.whId, qty: r6(cur + m.qty)});
-      rec.unitCost = m.unitCost;
-    } else if (m.type === 'out' || m.type === 'transfer') {
-      if (m.qty > cur + 1e-9) throw new Error(`במחסן ${whs[m.whId].name} יש רק ${fmtN(cur)} ${it.unit || ''}`);
-      t.set(sRef, {itemId: m.itemId, whId: m.whId, qty: r6(cur - m.qty)});
-      if (m.type === 'out') total -= m.qty;
-      else {
-        t.set(toRef, {itemId: m.itemId, whId: m.toId, qty: r6(toCur + m.qty)});
-        rec.toId = m.toId; rec.toName = whs[m.toId].name;
+    const keys = new Set();
+    for (const l of lines) { keys.add(stockId(l.itemId, l.whId)); if (l.toId) keys.add(stockId(l.itemId, l.toId)); }
+    for (const k of keys) { const s = await t.get(col('stock').doc(k)); st[k] = s.exists ? s.data().qty || 0 : 0; }
+    for (const l of lines) if (l.reverseOf) {
+      const s = await t.get(col('movements').doc(l.reverseOf));
+      if (!s.exists) throw new Error('התנועה המקורית לא נמצאה');
+      if (s.data().cancelled) throw new Error('התנועה כבר בוטלה');
+    }
+    const writes = [];
+    for (const l of lines) {
+      const it = its[l.itemId];
+      for (const w of [l.whId, l.toId]) if (w && !whs[w]) throw new Error('המחסן נמחק');
+      const k = stockId(l.itemId, l.whId), k2 = l.toId ? stockId(l.itemId, l.toId) : null;
+      const take = (key, whId, q) => {
+        if (q > st[key] + 1e-9) throw new Error(`במחסן "${whs[whId].name}" יש רק ${fmtN(st[key])} ${it.unit || ''} של "${it.name}"`);
+        st[key] = r6(st[key] - q);
+      };
+      const put = (key, q) => { st[key] = r6(st[key] + q); };
+      const rec = {type: l.type, itemId: l.itemId, itemName: it.name, sku: it.sku || '', whId: l.whId, whName: whs[l.whId].name,
+        date: hdr.date, note: hdr.note || '', at: TS(), by: userEmail, avgBefore: r6(it.avgCost || 0)};
+      if (hdr.ref) rec.ref = hdr.ref;
+      if (hdr.supplierId) { rec.supplierId = hdr.supplierId; rec.supplierName = hdr.supplierName; }
+      if (docId) rec.docId = docId;
+      const q = l.qty;
+      if (l.type === 'in') {
+        if (q > 0) put(k, q); else take(k, l.whId, -q);
+        // Cancelling a receipt: if no later receipt moved the average, restore it exactly
+        const restore = l.restoreAvg && Math.abs((it.avgCost || 0) - l.restoreAvg.expect) < 1e-6;
+        addIn(it, q, l.unitCost);
+        if (restore && it.totalQty > 1e-9) it.avgCost = l.restoreAvg.to;
+        if (q > 0) { it.lastCost = l.unitCost; if (hdr.supplierName) it.lastSupplier = hdr.supplierName; }
+        Object.assign(rec, {qty: q, unitCost: l.unitCost});
+      } else if (l.type === 'out') {
+        if (q > 0) { take(k, l.whId, q); it.totalQty = r6((it.totalQty || 0) - q); rec.unitCost = r6(it.avgCost || 0); }
+        else { put(k, -q); addIn(it, -q, l.unitCost); rec.unitCost = l.unitCost; }
+        rec.qty = q;
+      } else if (l.type === 'transfer') {
+        if (q > 0) { take(k, l.whId, q); put(k2, q); } else { take(k2, l.toId, -q); put(k, -q); }
+        Object.assign(rec, {qty: q, toId: l.toId, toName: whs[l.toId].name, unitCost: r6(it.avgCost || 0)});
+      } else if (l.type === 'adjust') {
+        const before = st[k];
+        const delta = l.counted != null ? r6(l.counted - before) : l.delta;
+        if (delta < 0) take(k, l.whId, -delta); else put(k, delta);
+        it.totalQty = r6((it.totalQty || 0) + delta);
+        Object.assign(rec, {qty: delta, before, counted: st[k], unitCost: r6(it.avgCost || 0)});
       }
-      rec.unitCost = avg;
-    } else if (m.type === 'adjust') {
-      const diff = r6(m.counted - cur);
-      if (diff === 0) throw new Error('הכמות שנספרה זהה לכמות במערכת');
-      t.set(sRef, {itemId: m.itemId, whId: m.whId, qty: r6(m.counted)});
-      total += diff;
-      Object.assign(rec, {qty: diff, before: cur, counted: m.counted, unitCost: avg});
+      rec.avgAfter = r6(it.avgCost || 0);
+      if (l.reverseOf) rec.reversalOf = l.reverseOf;
+      writes.push([col('movements').doc(), rec, l.reverseOf]);
     }
-    t.update(itemRef, {totalQty: r6(total), avgCost: r6(avg)});
-    t.set(U().collection('movements').doc(), rec);
+    for (const [id, it] of Object.entries(its)) {
+      const upd = {totalQty: r6(it.totalQty || 0), avgCost: r6(it.avgCost || 0)};
+      if (it.lastCost != null) upd.lastCost = it.lastCost;
+      if (it.lastSupplier) upd.lastSupplier = it.lastSupplier;
+      t.update(col('items').doc(id), upd);
+    }
+    for (const [k, qty] of Object.entries(st)) { const [itemId, whId] = k.split('__'); t.set(col('stock').doc(k), {itemId, whId, qty}); }
+    for (const [ref, rec, orig] of writes) {
+      t.set(ref, rec);
+      if (orig) t.update(col('movements').doc(orig), {cancelled: true, cancelId: ref.id, cancelledAt: TS(), cancelledBy: userEmail});
+    }
   });
 }
 
-function openMove(type) {
+/* ---------- Cancel a movement ---------- */
+function cancelMove(id) {
+  const m = moveCache[id]; if (!m) return;
+  openDlg('ביטול תנועה',
+    `<div class="hint"><b>${TYPE_LABEL[m.type]}</b> · ${esc(m.itemName)} · ${moveWhText(m)} · כמות ${fmtN(Math.abs(m.qty))} · ${dmy(m.date)}${m.ref ? ' · אסמכתא <bdi>' + esc(m.ref) + '</bdi>' : ''}</div>
+     <p class="sub" style="margin-top:0">תיווצר תנועה הפוכה שמחזירה את המלאי (והעלות הממוצעת) למצבם, והתנועה המקורית תסומן כמבוטלת. ההיסטוריה נשמרת.</p>
+     <div class="grid2">${field('cxDate', 'תאריך הביטול', `<input id="cxDate" type="date" required value="${today()}">`)}
+     ${field('cxReason', 'סיבה', `<input id="cxReason" placeholder="לדוגמה: הוזן בטעות">`)}</div>`,
+    async () => {
+      const line = {type: m.type, itemId: m.itemId, whId: m.whId, toId: m.toId, reverseOf: id};
+      if (m.type === 'adjust') line.delta = -m.qty; else line.qty = -m.qty;
+      if (m.type === 'in' || m.type === 'out') line.unitCost = m.unitCost;
+      if (m.type === 'in' && m.avgBefore != null && m.avgAfter != null) line.restoreAvg = {expect: m.avgAfter, to: m.avgBefore};
+      // the reversal joins the original document, so supplier totals group them together
+      await commit([line], {date: $('cxDate').value, note: 'ביטול' + (val('cxReason') ? ': ' + val('cxReason') : ''),
+        ref: m.ref, supplierId: m.supplierId, supplierName: m.supplierName}, m.docId || m.id);
+      toast('התנועה בוטלה');
+    }, 'ביטול התנועה', {cancelLabel: 'חזרה'});
+}
+
+/* ---------- Multi-line documents (receipt / issue / transfer / count) ---------- */
+function openDoc(type, preItem) {
   if (!Object.keys(whs).length) { toast('יש להוסיף מחסן קודם'); return; }
   if (!Object.keys(items).length) { toast('יש להוסיף פריט קודם'); return; }
   if (type === 'transfer' && Object.keys(whs).length < 2) { toast('להעברה צריך לפחות שני מחסנים'); return; }
-  const itemOpts = sortedItems().map(it => `<option value="${it.id}">${esc(it.name)}${it.sku ? ' · ' + esc(it.sku) : ''}</option>`).join('');
   const whOpts = sortedWhs().map(w => `<option value="${w.id}">${esc(w.name)}</option>`).join('');
+  let head = '<div class="grid3">';
+  if (type === 'transfer') head += field('dWh', 'ממחסן', `<select id="dWh">${whOpts}</select>`) + field('dTo', 'למחסן', `<select id="dTo">${whOpts}</select>`);
+  else head += field('dWh', 'מחסן', `<select id="dWh">${whOpts}</select>`);
+  head += field('dDate', 'תאריך', `<input id="dDate" type="date" required value="${today()}">`);
+  if (type === 'in') head += field('dSup', 'ספק', `<input id="dSup" list="supDl" placeholder="בחירה או הקלדת ספק חדש"><datalist id="supDl">${sortedSups().map(s => `<option value="${esc(s.name)}">`).join('')}</datalist>`);
+  if (type !== 'adjust') head += field('dRef', type === 'in' ? 'מס׳ חשבונית / תעודת משלוח' : 'אסמכתא', `<input id="dRef">`);
+  head += field('dNote', 'הערה', `<input id="dNote">`) + '</div>';
+  const cols = {
+    in: '<th>פריט</th><th class="num">כמות</th><th class="num">עלות ליח׳ (₪)</th><th class="num">סה״כ</th><th></th>',
+    out: '<th>פריט</th><th class="num">במחסן</th><th class="num">כמות</th><th class="num">שווי</th><th></th>',
+    transfer: '<th>פריט</th><th class="num">במחסן המקור</th><th class="num">כמות</th><th></th>',
+    adjust: '<th>פריט</th><th class="num">במערכת</th><th class="num">נספר בפועל</th><th class="num">הפרש</th><th></th>'
+  }[type];
+  const html = head + `<datalist id="itemsDl">${sortedItems().map(it => `<option value="${esc(itemLabel(it))}">`).join('')}</datalist>
+    <div class="tbl-wrap"><table class="lines"><thead><tr>${cols}</tr></thead><tbody id="docLines"></tbody></table></div>
+    <div class="doc-foot"><button type="button" class="btn sm" id="addLineBtn">הוספת שורה</button>
+    ${type === 'adjust' ? '<button type="button" class="btn sm" id="loadAllBtn">טעינת כל הפריטים שבמחסן</button>' : ''}
+    <span class="doc-total" id="docTotal"></span></div>
+    ${type === 'adjust' ? '<p class="sub">שורות שבהן "נספר בפועל" ריק או זהה לכמות במערכת לא ישתנו.</p>' : '<p class="sub">אפשר להקליד שם פריט, מק״ט או לסרוק ברקוד. Enter עובר לשדה הבא.</p>'}`;
+
+  openDlg(DOC_TITLE[type], html, () => submitDoc(type), type === 'adjust' ? 'עדכון ספירה' : 'ביצוע', {wide: true});
   const defWh = $('sWh').value;
-  const titles = {in: 'קבלה למלאי', out: 'הוצאה מהמלאי', transfer: 'העברה בין מחסנים', adjust: 'ספירת מלאי'};
-  let html = `<div class="hint" id="mvHint"></div>` + field('mvItem', 'פריט', `<select id="mvItem" required>${itemOpts}</select>`);
-  if (type === 'transfer') {
-    html += `<div class="grid2">` + field('mvWh', 'ממחסן', `<select id="mvWh">${whOpts}</select>`) +
-      field('mvTo', 'למחסן', `<select id="mvTo">${whOpts}</select>`) + `</div>`;
-  } else html += field('mvWh', 'מחסן', `<select id="mvWh">${whOpts}</select>`);
-  html += `<div class="grid2">`;
-  if (type === 'adjust') html += field('mvQty', 'כמות שנספרה בפועל', `<input id="mvQty" type="number" step="any" min="0" required>`);
-  else html += field('mvQty', 'כמות', `<input id="mvQty" type="number" step="any" min="0.001" required>`);
-  if (type === 'in') html += field('mvCost', 'עלות ליחידה (₪)', `<input id="mvCost" type="number" step="any" min="0" required>`);
-  html += field('mvDate', 'תאריך', `<input id="mvDate" type="date" required value="${today()}">`) + `</div>`;
-  html += field('mvNote', type === 'in' ? 'ספק / מס׳ חשבונית / הערה' : 'הערה', `<input id="mvNote">`);
+  if (defWh) $('dWh').value = defWh;
+  if (type === 'transfer') $('dTo').value = sortedWhs().find(w => w.id !== $('dWh').value).id;
 
-  openDlg(titles[type], html, async () => {
-    const m = {type, itemId: $('mvItem').value, whId: $('mvWh').value, date: $('mvDate').value, note: val('mvNote')};
-    if (type === 'adjust') m.counted = num('mvQty'); else m.qty = num('mvQty');
-    if (type !== 'adjust' && !(m.qty > 0)) throw new Error('יש להזין כמות חיובית');
-    if (type === 'in') m.unitCost = num('mvCost');
-    if (type === 'transfer') { m.toId = $('mvTo').value; if (m.toId === m.whId) throw new Error('יש לבחור מחסן יעד שונה'); }
-    await doMove(m);
-    toast(titles[type] + ' נשמרה');
-  }, 'ביצוע');
-
-  if (defWh) $('mvWh').value = defWh;
-  if (type === 'transfer') { const other = sortedWhs().find(w => w.id !== $('mvWh').value); $('mvTo').value = other.id; }
-  const update = () => {
-    const it = items[$('mvItem').value]; if (!it) return;
-    const cur = qtyIn(it.id, $('mvWh').value);
-    let h = `במחסן: <b>${fmtN(cur)}</b> ${esc(it.unit)} · סה״כ בכל המחסנים: ${fmtN(it.totalQty)} · עלות ממוצעת: ${fmtM(it.avgCost)}`;
-    if (type === 'transfer') h += ` · ביעד: ${fmtN(qtyIn(it.id, $('mvTo').value))}`;
-    $('mvHint').innerHTML = h;
-    if (type === 'in' && document.activeElement !== $('mvCost') && !$('mvCost').dataset.touched) $('mvCost').value = it.avgCost ? r6(it.avgCost) : '';
+  const body = $('docLines');
+  const lineRow = () => {
+    const tr = document.createElement('tr');
+    const qtyCell = type === 'adjust' ? '<td><input class="ln-count" type="number" step="any" min="0" aria-label="נספר בפועל"></td>'
+      : '<td><input class="ln-qty" type="number" step="any" min="0" aria-label="כמות"></td>';
+    tr.innerHTML = `<td><input class="ln-item" list="itemsDl" placeholder="פריט / מק״ט" aria-label="פריט"><div class="sub ln-info"></div></td>` +
+      (type === 'in' ? qtyCell + '<td><input class="ln-cost" type="number" step="any" min="0" aria-label="עלות ליחידה"></td><td class="num ln-total"></td>'
+       : type === 'out' ? '<td class="num ln-avail"></td>' + qtyCell + '<td class="num ln-total"></td>'
+       : type === 'transfer' ? '<td class="num ln-avail"></td>' + qtyCell
+       : '<td class="num ln-avail"></td>' + qtyCell + '<td class="num ln-total"></td>') +
+      '<td><button type="button" class="btn link danger ln-del" aria-label="הסרת שורה">הסרה</button></td>';
+    body.appendChild(tr);
+    return tr;
   };
-  ['mvItem', 'mvWh', 'mvTo'].forEach(id => $(id) && $(id).addEventListener('change', update));
-  if (type === 'in') $('mvCost').addEventListener('input', () => $('mvCost').dataset.touched = '1');
-  update();
+  const refreshRow = tr => {
+    const it = resolveItem(tr.querySelector('.ln-item').value);
+    tr.dataset.item = it ? it.id : '';
+    const info = tr.querySelector('.ln-info');
+    const avail = tr.querySelector('.ln-avail'), total = tr.querySelector('.ln-total');
+    info.textContent = it ? `${it.unit || ''}${type === 'in' && it.lastSupplier ? ' · ספק אחרון: ' + it.lastSupplier : ''}` : (tr.querySelector('.ln-item').value.trim() ? 'פריט לא מזוהה' : '');
+    const have = it ? qtyIn(it.id, $('dWh').value) : 0;
+    if (avail) avail.textContent = it ? fmtN(have) : '';
+    if (type === 'in') {
+      const cost = tr.querySelector('.ln-cost');
+      if (it && !cost.dataset.touched && tr.dataset.costFor !== it.id) { cost.value = r6(it.lastCost ?? it.avgCost ?? 0) || ''; tr.dataset.costFor = it.id; }
+      const qv = parseFloat(tr.querySelector('.ln-qty').value) || 0, cv = parseFloat(cost.value) || 0;
+      total.textContent = it && qv ? fmtM(qv * cv) : '';
+    } else if (type === 'out') {
+      const qv = parseFloat(tr.querySelector('.ln-qty').value) || 0;
+      total.textContent = it && qv ? fmtM(qv * (it.avgCost || 0)) : '';
+    } else if (type === 'adjust') {
+      const c = tr.querySelector('.ln-count').value;
+      const diff = it && c !== '' ? r6(parseFloat(c) - have) : null;
+      total.textContent = diff == null || diff === 0 ? '' : (diff > 0 ? '+' : '') + fmtN(diff);
+    }
+  };
+  const refreshTotal = () => {
+    const rows = [...body.querySelectorAll('tr')];
+    rows.forEach(refreshRow);
+    if (type === 'in' || type === 'out') {
+      let sum = 0;
+      for (const tr of rows) {
+        const it = items[tr.dataset.item]; if (!it) continue;
+        const qv = parseFloat(tr.querySelector('.ln-qty').value) || 0;
+        sum += qv * (type === 'in' ? (parseFloat(tr.querySelector('.ln-cost').value) || 0) : (it.avgCost || 0));
+      }
+      $('docTotal').textContent = `סה״כ ${type === 'in' ? 'קבלה' : 'הוצאה'}: ${fmtM(sum)}`;
+    }
+  };
+  const ensureBlankLast = () => {
+    const last = body.lastElementChild;
+    if (!last || last.querySelector('.ln-item').value.trim()) lineRow();
+  };
+  body.addEventListener('input', e => {
+    const tr = e.target.closest('tr');
+    if (e.target.classList.contains('ln-cost')) e.target.dataset.touched = '1';
+    if (e.target.classList.contains('ln-item')) { tr.dataset.costFor = ''; const c = tr.querySelector('.ln-cost'); if (c) delete c.dataset.touched; }
+    refreshTotal(); ensureBlankLast();
+  });
+  body.addEventListener('click', e => {
+    if (!e.target.classList.contains('ln-del')) return;
+    e.target.closest('tr').remove(); if (!body.children.length) lineRow(); refreshTotal();
+  });
+  // Enter moves to the next field instead of submitting (barcode scanners send Enter)
+  body.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const inputs = [...body.querySelectorAll('input')];
+    const i = inputs.indexOf(e.target);
+    if (i === inputs.length - 1) { lineRow(); body.lastElementChild.querySelector('.ln-item').focus(); }
+    else inputs[i + 1].focus();
+  });
+  $('addLineBtn').addEventListener('click', () => { lineRow(); body.lastElementChild.querySelector('.ln-item').focus(); });
+  ['dWh', 'dTo'].forEach(id => $(id) && $(id).addEventListener('change', refreshTotal));
+  if ($('loadAllBtn')) $('loadAllBtn').addEventListener('click', () => {
+    const wh = $('dWh').value, present = new Set([...body.querySelectorAll('tr')].map(tr => tr.dataset.item).filter(Boolean));
+    [...body.querySelectorAll('tr')].forEach(tr => { if (!tr.querySelector('.ln-item').value.trim()) tr.remove(); });
+    sortedItems().filter(it => qtyIn(it.id, wh) !== 0 && !present.has(it.id)).forEach(it => { lineRow().querySelector('.ln-item').value = itemLabel(it); });
+    lineRow(); refreshTotal();
+  });
+  if (preItem && items[preItem]) lineRow().querySelector('.ln-item').value = itemLabel(items[preItem]);
+  lineRow(); refreshTotal();
+  if (preItem) setTimeout(() => body.querySelector(type === 'adjust' ? '.ln-count' : '.ln-qty').focus(), 0);
 }
-document.querySelectorAll('[data-move]').forEach(b => b.addEventListener('click', () => openMove(b.dataset.move)));
+
+async function submitDoc(type) {
+  const wh = $('dWh').value, toId = $('dTo') ? $('dTo').value : null;
+  if (type === 'transfer' && wh === toId) throw new Error('יש לבחור מחסן יעד שונה');
+  const lines = [], seen = new Set();
+  [...$('docLines').querySelectorAll('tr')].forEach((tr, i) => {
+    const text = tr.querySelector('.ln-item').value.trim();
+    const qEl = tr.querySelector(type === 'adjust' ? '.ln-count' : '.ln-qty');
+    if (!text && !qEl.value) return;
+    const it = resolveItem(text);
+    if (!it) throw new Error(`שורה ${i + 1}: פריט לא מזוהה "${text}"`);
+    if (type === 'adjust') {
+      if (qEl.value === '') return;
+      if (seen.has(it.id)) throw new Error(`הפריט "${it.name}" מופיע פעמיים בספירה`);
+      seen.add(it.id);
+      const counted = parseFloat(qEl.value);
+      if (!(counted >= 0)) throw new Error(`שורה ${i + 1}: כמות לא תקינה`);
+      if (r6(counted - qtyIn(it.id, wh)) === 0) return;
+      lines.push({type, itemId: it.id, whId: wh, counted});
+    } else {
+      const q = parseFloat(qEl.value);
+      if (!(q > 0)) throw new Error(`שורה ${i + 1}: יש להזין כמות חיובית`);
+      const l = {type, itemId: it.id, whId: wh, qty: q};
+      if (type === 'in') l.unitCost = parseFloat(tr.querySelector('.ln-cost').value) || 0;
+      if (type === 'transfer') l.toId = toId;
+      lines.push(l);
+    }
+  });
+  if (!lines.length) throw new Error(type === 'adjust' ? 'אין שינויים לעדכן' : 'יש להוסיף לפחות שורה אחת');
+  if (type !== 'adjust' && lines.length > MAX_LINES) throw new Error(`עד ${MAX_LINES} שורות במסמך אחד`);
+  const hdr = {date: $('dDate').value, note: val('dNote'), ref: $('dRef') ? val('dRef') : ''};
+  if (type === 'in') {
+    const s = await ensureSupplier(val('dSup'));
+    if (s) { hdr.supplierId = s.id; hdr.supplierName = s.name; }
+  }
+  if (type === 'adjust') {  // a full count can be long: commit in chunks
+    const docId = lines.length > 1 ? col('movements').doc().id : null;
+    for (let i = 0; i < lines.length; i += MAX_LINES) await commit(lines.slice(i, i + MAX_LINES), hdr, docId);
+  } else await commit(lines, hdr);
+  toast(`${DOC_TITLE[type]} נשמרה · ${lines.length} ${lines.length === 1 ? 'שורה' : 'שורות'}`);
+}
+
+/* ---------- Item card ---------- */
+async function openCard(id) {
+  const it = items[id]; if (!it) { toast('הפריט נמחק'); return; }
+  const perWh = sortedWhs().map(w => [w, qtyIn(id, w.id)]).filter(([, n]) => n !== 0);
+  const html = `<div class="hint">${[it.sku && 'מק״ט ' + esc(it.sku), it.category && esc(it.category), it.unit && 'יחידה: ' + esc(it.unit), it.minQty ? 'מינימום ' + fmtN(it.minQty) : ''].filter(Boolean).join(' · ') || '—'}</div>
+    <div class="card-actions">
+      <button type="button" class="btn sm" data-doc="in" data-item="${id}">קבלה</button>
+      <button type="button" class="btn sm" data-doc="out" data-item="${id}">הוצאה</button>
+      <button type="button" class="btn sm" data-doc="transfer" data-item="${id}">העברה</button>
+      <button type="button" class="btn sm" data-doc="adjust" data-item="${id}">ספירה</button>
+      <button type="button" class="btn sm" data-edit-item="${id}">עריכת פריט</button>
+    </div>
+    <div class="cards">
+      <div class="card${isLow(it) ? ' alert' : ''}"><div class="k">סה״כ כמות</div><div class="v">${fmtN(it.totalQty)} <span class="sub">${esc(it.unit)}</span></div></div>
+      <div class="card"><div class="k">עלות ממוצעת</div><div class="v">${fmtM(it.avgCost)}</div></div>
+      <div class="card"><div class="k">שווי</div><div class="v">${fmtM((it.totalQty || 0) * (it.avgCost || 0))}</div></div>
+      <div class="card"><div class="k">קנייה אחרונה</div><div class="v s">${it.lastCost != null ? fmtM(it.lastCost) : '—'}${it.lastSupplier ? `<div class="sub">${esc(it.lastSupplier)}</div>` : ''}</div></div>
+    </div>
+    <h3>לפי מחסן</h3>
+    ${perWh.length ? `<div class="tbl-wrap"><table><thead><tr><th>מחסן</th><th class="num">כמות</th><th class="num">שווי</th></tr></thead><tbody>${perWh.map(([w, n]) => `<tr><td>${esc(w.name)}</td><td class="num">${fmtN(n)}</td><td class="num">${fmtM(n * (it.avgCost || 0))}</td></tr>`).join('')}</tbody></table></div>` : '<p class="sub">אין מלאי בשום מחסן.</p>'}
+    <h3>היסטוריית תנועות</h3><div id="cardMoves" class="sub">טוען…</div>`;
+  openDlg(it.name, html, async () => {}, 'סגירה', {wide: true, noCancel: true});
+  const snap = await col('movements').where('itemId', '==', id).get();
+  if (!$('cardMoves')) return;  // dialog moved on
+  const list = snap.docs.map(d => ({id: d.id, ...d.data()})).sort(byDateDesc);
+  list.forEach(m => moveCache[m.id] = m);
+  $('cardMoves').outerHTML = list.length ? `<div class="tbl-wrap"><table><thead><tr><th>תאריך</th><th>סוג</th><th>מחסן</th><th class="num">כמות</th><th class="num">עלות ליח׳</th><th class="num">שווי</th><th class="num">ממוצע אחרי</th><th>פרטים</th><th></th></tr></thead><tbody>` +
+    list.slice(0, 300).map(m => moveRow(m, true)).join('') + `</tbody></table></div>` +
+    (list.length > 300 ? `<p class="sub">מוצגות 300 התנועות האחרונות מתוך ${list.length}.</p>` : '') : '<p class="sub">אין תנועות לפריט.</p>';
+}
 
 /* ---------- Excel ---------- */
 const COLS = ['שם פריט', 'מק"ט', 'יחידה', 'קטגוריה', 'כמות מינימום', 'מחסן', 'כמות', 'עלות ליחידה'];
 function saveWb(sheets, name) {
   const wb = XLSX.utils.book_new();
   wb.Workbook = {Views: [{RTL: true}]};
-  for (const [title, rows] of sheets) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), title);
+  for (const [title, rows] of sheets) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows.length ? rows : [{'': 'אין נתונים'}]), title);
   XLSX.writeFile(wb, name + '.xlsx');
 }
+const moveExportRow = m => ({'תאריך': m.date, 'סוג': (m.reversalOf ? 'ביטול ' : '') + TYPE_LABEL[m.type], 'בוטלה': m.cancelled ? 'כן' : '',
+  'פריט': m.itemName, 'מק"ט': m.sku || '', 'ממחסן': m.whName, 'למחסן': m.toName || '', 'כמות': moveQty(m),
+  'עלות ליחידה': r6(m.unitCost || 0), 'שווי': money(moveValue(m)), 'ספק': m.supplierName || '', 'אסמכתא': m.ref || '',
+  'הערה': m.note || '', 'בוצע ע"י': m.by || ''});
+
 $('templateBtn').addEventListener('click', () => {
   saveWb([['פריטים', [Object.fromEntries(COLS.map(c => [c, '']))]]], 'תבנית-פריטים');
 });
@@ -659,22 +1001,24 @@ $('exportStockBtn').addEventListener('click', () => {
   const byWh = [];
   for (const w of sortedWhs()) for (const it of sortedItems()) {
     const q = qtyIn(it.id, w.id);
-    if (q) byWh.push({'מחסן': w.name, 'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'כמות': q, 'יחידה': it.unit || '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': Math.round(q * (it.avgCost || 0) * 100) / 100});
+    if (q) byWh.push({'מחסן': w.name, 'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'כמות': q, 'יחידה': it.unit || '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': money(q * (it.avgCost || 0))});
   }
-  const summary = sortedItems().map(it => ({'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'סה"כ כמות': it.totalQty || 0, 'יחידה': it.unit || '', 'מינימום': it.minQty || 0, 'מתחת למינימום': isLow(it) ? 'כן' : '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': Math.round((it.totalQty || 0) * (it.avgCost || 0) * 100) / 100}));
+  const summary = sortedItems().map(it => ({'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'סה"כ כמות': it.totalQty || 0, 'יחידה': it.unit || '', 'מינימום': it.minQty || 0, 'מתחת למינימום': isLow(it) ? 'כן' : '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': money((it.totalQty || 0) * (it.avgCost || 0))}));
   saveWb([['סיכום פריטים', summary], ['מלאי לפי מחסן', byWh]], 'דוח-מלאי-' + today());
 });
 $('exportMovesBtn').addEventListener('click', () => {
   const list = filteredMoves(), from = $('mFrom').value, to = $('mTo').value, wh = $('mWh').value;
   if (!list.length) { toast('אין תנועות לייצוא בסינון הנוכחי'); return; }
-  const money = n => Math.round(n * 100) / 100;
-  const rows = list.map(m => ({'תאריך': m.date, 'סוג': TYPE_LABEL[m.type], 'פריט': m.itemName, 'מק"ט': m.sku || '', 'ממחסן': m.whName, 'למחסן': m.toName || '', 'כמות': m.type === 'out' ? -m.qty : m.qty, 'עלות ליחידה': r6(m.unitCost || 0), 'שווי': money(Math.abs(m.qty * m.unitCost)), 'הערה': m.note || '', 'בוצע ע"י': m.by || ''}));
   // per-item summary for the period; with a warehouse filter, transfers count as in/out of that warehouse
-  const sum = {};
+  const sum = {}, bySup = {};
   for (const m of list) {
     const r = sum[m.itemId] ||= {name: m.itemName, sku: m.sku || '', inQ: 0, inV: 0, outQ: 0, outV: 0, trQ: 0, trIn: 0, trOut: 0, adjQ: 0, adjV: 0};
     const v = m.qty * (m.unitCost || 0);
-    if (m.type === 'in') { r.inQ += m.qty; r.inV += v; }
+    if (m.type === 'in') {
+      r.inQ += m.qty; r.inV += v;
+      const s = bySup[m.supplierName || 'ללא ספק'] ||= {docs: new Set(), q: 0, v: 0};
+      s.docs.add(m.docId || m.id); s.v += v;
+    }
     else if (m.type === 'out') { r.outQ += m.qty; r.outV += v; }
     else if (m.type === 'adjust') { r.adjQ += m.qty; r.adjV += v; }
     else if (m.type === 'transfer') { r.trQ += m.qty; if (m.toId === wh) r.trIn += m.qty; if (m.whId === wh) r.trOut += m.qty; }
@@ -688,9 +1032,72 @@ $('exportMovesBtn').addEventListener('click', () => {
     row['שינוי נטו בכמות'] = r6(r.inQ - r.outQ + r.adjQ + (wh ? r.trIn - r.trOut : 0));
     return row;
   });
+  const sups = Object.entries(bySup).sort((a, b) => b[1].v - a[1].v).map(([name, s]) => ({'ספק': name, 'קבלות': s.docs.size, 'שווי קניות': money(s.v)}));
   const range = from || to ? `${from || 'התחלה'}-עד-${to || today()}` : 'עד-' + today();
-  saveWb([['סיכום לפי פריט', summary], ['תנועות', rows]], `תנועות-מלאי-${range}${wh ? '-' + whs[wh].name : ''}`);
+  saveWb([['סיכום לפי פריט', summary], ['קניות לפי ספק', sups], ['תנועות', list.map(moveExportRow)]], `תנועות-מלאי-${range}${wh ? '-' + whs[wh].name : ''}`);
 });
+
+/* Stock as of a past date: current stock minus every movement dated after it.
+   Cost = the item's average cost at that time (avgBefore of its first later movement). */
+$('asOfBtn').addEventListener('click', () => {
+  const y = new Date().getFullYear();
+  openDlg('דוח מלאי לתאריך',
+    field('rpDate', 'מלאי נכון לסוף היום', `<input id="rpDate" type="date" required value="${y - 1}-12-31" max="${today()}">`) +
+    `<p class="sub">מתאים לספירת סוף שנה ולרואה החשבון. הכמויות מחושבות מהמלאי הנוכחי בניכוי כל התנועות שאחרי התאריך, והשווי לפי העלות הממוצעת שהייתה באותו מועד.</p>`,
+    async () => {
+      const D = $('rpDate').value;
+      const snap = await col('movements').where('date', '>', D).get();
+      const after = snap.docs.map(d => d.data()).sort(byDateAsc);
+      const st = {}; for (const [k, v] of Object.entries(stock)) st[k] = v.qty || 0;
+      const info = {}, whName = {};
+      for (const m of after) {
+        if (!(m.itemId in info)) info[m.itemId] = {name: m.itemName, sku: m.sku, avg: m.avgBefore};
+        whName[m.whId] = m.whName; if (m.toId) whName[m.toId] = m.toName;
+        const add = (w, q) => { const k = stockId(m.itemId, w); st[k] = r6((st[k] || 0) + q); };
+        if (m.type === 'in' || m.type === 'adjust') add(m.whId, -m.qty);
+        else if (m.type === 'out') add(m.whId, m.qty);
+        else if (m.type === 'transfer') { add(m.whId, m.qty); add(m.toId, -m.qty); }
+      }
+      const byItem = {}, byWh = [];
+      for (const [k, q] of Object.entries(st)) {
+        if (Math.abs(q) < 1e-9) continue;
+        const [itemId, whId] = k.split('__');
+        const it = items[itemId] || {}, inf = info[itemId] || {};
+        const approx = itemId in info ? inf.avg == null : false;
+        const avg = itemId in info && inf.avg != null ? inf.avg : (it.avgCost || 0);
+        const name = it.name || inf.name || '(פריט שנמחק)', sku = it.sku || inf.sku || '';
+        byWh.push({'מחסן': (whs[whId] || {}).name || whName[whId] || '(מחסן שנמחק)', 'פריט': name, 'מק"ט': sku, 'כמות': q, 'יחידה': it.unit || '', 'עלות ממוצעת': r6(avg), 'שווי': money(q * avg)});
+        const r = byItem[itemId] ||= {'פריט': name, 'מק"ט': sku, 'קטגוריה': it.category || '', 'כמות': 0, 'יחידה': it.unit || '', 'עלות ממוצעת': r6(avg), 'שווי': 0, 'הערה': approx ? 'עלות לפי העלות הנוכחית' : ''};
+        r['כמות'] = r6(r['כמות'] + q); r['שווי'] = money(r['שווי'] + q * avg);
+      }
+      const summary = Object.values(byItem).sort((a, b) => a['פריט'].localeCompare(b['פריט'], 'he'));
+      byWh.sort((a, b) => a['מחסן'].localeCompare(b['מחסן'], 'he') || a['פריט'].localeCompare(b['פריט'], 'he'));
+      const total = summary.reduce((s, r) => s + r['שווי'], 0);
+      summary.push({'פריט': 'סה"כ', 'שווי': money(total)});
+      saveWb([['סיכום פריטים', summary], ['מלאי לפי מחסן', byWh]], `מלאי-נכון-ל-${D}`);
+      toast(`הדוח הופק · שווי מלאי ב־${dmy(D)}: ${fmtM(total)}`);
+    }, 'הפקת דוח');
+});
+
+/* Full backup of everything to one Excel file */
+$('backupBtn').addEventListener('click', async () => {
+  const b = $('backupBtn'); b.disabled = true; b.textContent = 'מכין גיבוי…';
+  try {
+    const snap = await col('movements').get();
+    const all = snap.docs.map(d => ({id: d.id, ...d.data()})).sort(byDateAsc);
+    const plain = o => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, v && v.toDate ? v.toDate().toISOString() : v]));
+    saveWb([
+      ['פריטים', sortedItems().map(plain)],
+      ['מחסנים', sortedWhs().map(plain)],
+      ['מלאי', Object.entries(stock).map(([id, s]) => ({id, ...s}))],
+      ['ספקים', sortedSups().map(plain)],
+      ['תנועות', all.map(plain)]
+    ], 'גיבוי-מלאי-' + today());
+    toast(`הגיבוי ירד · ${all.length} תנועות`);
+  } catch (e) { console.error(e); toast('שגיאה בהכנת הגיבוי'); }
+  finally { b.disabled = false; b.textContent = 'גיבוי'; }
+});
+
 $('importBtn').addEventListener('click', () => $('importFile').click());
 $('importFile').addEventListener('change', async e => {
   const file = e.target.files[0]; e.target.value = '';
@@ -707,19 +1114,19 @@ $('importFile').addEventListener('change', async e => {
       const data = {name, sku, unit: g(r, 'יחידה') || 'יח׳', category: g(r, 'קטגוריה'), minQty: parseFloat(g(r, 'כמות מינימום', 'מינימום')) || 0};
       let it = Object.values(items).find(x => (sku && x.sku === sku) || (!sku && x.name === name));
       let id;
-      if (it) { id = it.id; await U().collection('items').doc(id).update(data); updated++; }
+      if (it) { id = it.id; await col('items').doc(id).update(data); updated++; }
       else {
-        const ref = await U().collection('items').add({...data, avgCost: 0, totalQty: 0, createdAt: TS()});
+        const ref = await col('items').add({...data, avgCost: 0, totalQty: 0, createdAt: TS()});
         id = ref.id; items[id] = {id, ...data, avgCost: 0, totalQty: 0}; created++;
       }
       const qty = parseFloat(g(r, 'כמות')) || 0, whName = g(r, 'מחסן');
       if (qty > 0 && whName) {
         let w = Object.values(whs).find(x => x.name === whName);
         if (!w) {
-          const ref = await U().collection('warehouses').add({name: whName, note: '', createdAt: TS()});
+          const ref = await col('warehouses').add({name: whName, note: '', createdAt: TS()});
           w = whs[ref.id] = {id: ref.id, name: whName, note: ''};
         }
-        await doMove({type: 'in', itemId: id, whId: w.id, qty, unitCost: parseFloat(g(r, 'עלות ליחידה', 'עלות')) || 0, date: today(), note: 'ייבוא מאקסל'});
+        await commit([{type: 'in', itemId: id, whId: w.id, qty, unitCost: parseFloat(g(r, 'עלות ליחידה', 'עלות')) || 0}], {date: today(), note: 'ייבוא מאקסל'});
         received++;
       }
     }
