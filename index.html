@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F9F9F7">
+<title>מלאי · ניהול מחסנים</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --bg:#FCFCFB; --wash:#F6F5F1; --ink:#2E2C27; --ink-soft:#6B6A63;
+    --ink-grey:#9A998F; --hairline:#E4E3DC; --clay:#C6613F; --clay-hover:#AE5133;
+    --ok:#3F7D53; --ok-wash:#EAF3EC; --warn:#A8742A; --warn-wash:#FBF3E4; --bad:#B23B2E; --bad-wash:#FBECE9;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:15px;}
+  a{color:var(--clay-hover);}
+  button,input,select,textarea{font-family:inherit;font-size:14px;color:var(--ink);}
+  input,select,textarea{border:1px solid var(--hairline);border-radius:4px;padding:8px 10px;background:#fff;width:100%;}
+  input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--clay);outline-offset:1px;}
+  .btn{background:#fff;border:1px solid var(--hairline);border-radius:3px;padding:8px 14px;cursor:pointer;white-space:nowrap;}
+  .btn:hover{border-color:var(--ink-soft);}
+  .btn.primary{background:var(--clay);border-color:var(--clay);color:#fff;font-weight:500;}
+  .btn.primary:hover{background:var(--clay-hover);}
+  .btn.link{border:none;background:none;padding:4px 6px;color:var(--ink-soft);text-decoration:underline;text-underline-offset:2px;}
+  .btn.danger{color:var(--bad);}
+  .hidden{display:none !important;}
+
+  /* login */
+  #login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:16px;}
+  .login-box{width:100%;max-width:360px;background:var(--wash);border:1px solid var(--hairline);border-radius:6px;padding:26px;}
+  .login-box h1{margin:0 0 4px;font-size:22px;display:flex;align-items:center;gap:10px;}
+  .login-box p{margin:0 0 18px;color:var(--ink-soft);font-size:14px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:4px;}
+  .err{color:var(--bad);font-size:13px;min-height:18px;margin:4px 0 8px;}
+
+  /* app */
+  header{border-bottom:1px solid var(--hairline);background:var(--wash);}
+  .bar{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .brand{font-weight:700;font-size:18px;display:flex;align-items:center;gap:8px;}
+  .who{margin-inline-start:auto;font-size:13px;color:var(--ink-soft);}
+  main{max-width:1120px;margin:0 auto;padding:18px 16px 40px;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+  .tabs{display:flex;border-bottom:1px solid var(--hairline);margin-bottom:16px;overflow-x:auto;}
+  .tab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;cursor:pointer;color:var(--ink-soft);font-size:15px;}
+  .tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--clay);font-weight:600;}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:16px;}
+  .card{background:var(--wash);border:1px solid var(--hairline);border-radius:4px;padding:12px 14px;}
+  .card .k{font-size:12px;color:var(--ink-soft);}
+  .card .v{font-size:20px;font-weight:700;margin-top:4px;}
+  .card.alert .v{color:var(--bad);}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;}
+  .toolbar input,.toolbar select{width:auto;min-width:160px;flex:1 1 160px;max-width:280px;}
+  .toolbar .sp{flex:1 1 0;}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--hairline);border-radius:4px;}
+  table{width:100%;border-collapse:collapse;font-size:14px;}
+  th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--hairline);white-space:nowrap;}
+  th{background:var(--wash);font-weight:600;font-size:13px;color:var(--ink-soft);}
+  tr:last-child td{border-bottom:none;}
+  td.num,th.num{text-align:left;direction:ltr;font-variant-numeric:tabular-nums;}
+  td.wrap{white-space:normal;min-width:160px;}
+  .sub{font-size:12px;color:var(--ink-grey);}
+  .tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:2px;}
+  .tag.low{background:var(--bad-wash);color:var(--bad);}
+  .tag.ok{background:var(--ok-wash);color:var(--ok);}
+  .tag.in{background:var(--ok-wash);color:var(--ok);}
+  .tag.out{background:var(--bad-wash);color:var(--bad);}
+  .tag.transfer{background:#E8EEF4;color:#2F5677;}
+  .tag.adjust{background:var(--warn-wash);color:var(--warn);}
+  tr.low td:first-child{box-shadow:inset -3px 0 0 var(--bad);}
+  .empty{text-align:center;color:var(--ink-grey);padding:30px 10px;}
+  .row-actions{display:flex;gap:2px;}
+
+  dialog{border:1px solid var(--hairline);border-radius:6px;padding:0;width:min(460px,calc(100vw - 32px));color:var(--ink);}
+  dialog::backdrop{background:rgba(30,28,24,.35);}
+  .dlg-head{padding:14px 18px;border-bottom:1px solid var(--hairline);font-weight:600;font-size:16px;background:var(--wash);}
+  .dlg-body{padding:16px 18px;}
+  .dlg-foot{padding:12px 18px;border-top:1px solid var(--hairline);display:flex;gap:8px;justify-content:flex-start;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .hint{font-size:13px;color:var(--ink-soft);background:var(--wash);border-radius:3px;padding:8px 10px;margin-bottom:12px;}
+
+  #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:4px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:calc(100vw - 32px);}
+  #toast.show{opacity:1;}
+  footer{max-width:1120px;margin:0 auto;padding:16px;font-size:12px;color:var(--ink-grey);display:flex;gap:14px;flex-wrap:wrap;border-top:1px solid var(--hairline);}
+  footer a{color:var(--ink-soft);}
+  @media (max-width:600px){
+    .grid2{grid-template-columns:1fr;}
+    .toolbar input,.toolbar select{max-width:none;}
+    .actions .btn{flex:1 1 calc(50% - 8px);}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 32 32"><rect x="1" y="1" width="30" height="30" rx="3" fill="#C6613F"/><path d="M7 25V12l9-5 9 5v13" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/><rect x="11" y="16" width="4.5" height="4.5" fill="#fff"/><rect x="16.5" y="16" width="4.5" height="4.5" fill="#fff"/><rect x="13.75" y="20.5" width="4.5" height="4.5" fill="#fff"/></symbol>
+</svg>
+
+<!-- Login -->
+<section id="login" class="hidden">
+  <form class="login-box" id="loginForm">
+    <h1><svg width="28" height="28" aria-hidden="true"><use href="#logo"/></svg>מלאי</h1>
+    <p>כניסה לניהול המחסנים</p>
+    <div class="field"><label for="lEmail">אימייל</label><input id="lEmail" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="lPass">סיסמה</label><input id="lPass" type="password" autocomplete="current-password" required></div>
+    <div class="err" id="lErr" role="alert"></div>
+    <button class="btn primary" type="submit" style="width:100%">כניסה</button>
+    <button class="btn link" type="button" id="forgotBtn" style="margin-top:8px">שכחתי סיסמה</button>
+  </form>
+</section>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <header><div class="bar">
+    <div class="brand"><svg width="26" height="26" aria-hidden="true"><use href="#logo"/></svg>מלאי</div>
+    <span class="who" id="who"></span>
+    <button class="btn" id="logoutBtn">יציאה</button>
+  </div></header>
+
+  <main>
+    <div class="actions">
+      <button class="btn primary" data-move="in">קבלה למלאי</button>
+      <button class="btn" data-move="out">הוצאה מהמלאי</button>
+      <button class="btn" data-move="transfer">העברה בין מחסנים</button>
+      <button class="btn" data-move="adjust">ספירת מלאי</button>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="stock" aria-selected="true">מלאי</button>
+      <button class="tab" role="tab" data-tab="items" aria-selected="false">פריטים</button>
+      <button class="tab" role="tab" data-tab="whs" aria-selected="false">מחסנים</button>
+      <button class="tab" role="tab" data-tab="moves" aria-selected="false">תנועות</button>
+    </div>
+
+    <!-- Stock -->
+    <section id="tab-stock" role="tabpanel">
+      <div class="cards">
+        <div class="card"><div class="k">שווי מלאי</div><div class="v" id="cValue">₪0</div></div>
+        <div class="card"><div class="k">פריטים במלאי</div><div class="v" id="cItems">0</div></div>
+        <div class="card" id="cLowCard"><div class="k">מתחת למינימום</div><div class="v" id="cLow">0</div></div>
+        <div class="card"><div class="k">מחסנים</div><div class="v" id="cWhs">0</div></div>
+      </div>
+      <div class="toolbar">
+        <select id="sWh" aria-label="סינון לפי מחסן"></select>
+        <input id="sSearch" type="search" placeholder="חיפוש פריט / מק״ט / קטגוריה" aria-label="חיפוש">
+        <label style="display:flex;gap:6px;align-items:center;font-size:13px;white-space:nowrap"><input type="checkbox" id="sLow" style="width:auto">רק מתחת למינימום</label>
+        <span class="sp"></span>
+        <button class="btn" id="exportStockBtn">ייצוא לאקסל</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>פריט</th><th>מק״ט</th><th>קטגוריה</th><th class="num">כמות</th><th>יחידה</th><th class="num">עלות ממוצעת</th><th class="num">שווי</th><th>מצב</th></tr></thead>
+        <tbody id="stockBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- Items -->
+    <section id="tab-items" role="tabpanel" class="hidden">
+      <div class="toolbar">
+        <input id="iSearch" type="search" placeholder="חיפוש פריט" aria-label="חיפוש פריט">
+        <span class="sp"></span>
+        <button class="btn" id="templateBtn">תבנית אקסל</button>
+        <button class="btn" id="importBtn">ייבוא מאקסל</button>
+        <input type="file" id="importFile" accept=".xlsx,.xls,.csv" class="hidden">
+        <button class="btn primary" id="addItemBtn">פריט חדש</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>פריט</th><th>מק״ט</th><th>קטגוריה</th><th>יחידה</th><th class="num">מינימום</th><th class="num">עלות ממוצעת</th><th class="num">סה״כ כמות</th><th></th></tr></thead>
+        <tbody id="itemsBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- Warehouses -->
+    <section id="tab-whs" role="tabpanel" class="hidden">
+      <div class="toolbar"><span class="sp"></span><button class="btn primary" id="addWhBtn">מחסן חדש</button></div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>מחסן</th><th>מיקום / הערה</th><th class="num">פריטים</th><th class="num">שווי</th><th></th></tr></thead>
+        <tbody id="whsBody"></tbody>
+      </table></div>
+    </section>
+
+    <!-- Movements -->
+    <section id="tab-moves" role="tabpanel" class="hidden">
+      <div class="toolbar">
+        <select id="mType" aria-label="סוג תנועה">
+          <option value="">כל סוגי התנועות</option><option value="in">קבלה</option><option value="out">הוצאה</option><option value="transfer">העברה</option><option value="adjust">ספירה</option>
+        </select>
+        <select id="mWh" aria-label="מחסן"></select>
+        <input id="mSearch" type="search" placeholder="חיפוש פריט / הערה" aria-label="חיפוש תנועה">
+        <span class="sp"></span>
+        <button class="btn" id="exportMovesBtn">ייצוא לאקסל</button>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>תאריך</th><th>סוג</th><th>פריט</th><th>מחסן</th><th class="num">כמות</th><th class="num">עלות ליח׳</th><th class="num">שווי</th><th>הערה</th></tr></thead>
+        <tbody id="movesBody"></tbody>
+      </table></div>
+      <p class="sub">מוצגות 1,000 התנועות האחרונות. תנועות אינן נמחקות — תיקון מבצעים בספירת מלאי.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="yr"></span> Next1</span>
+    <a href="privacy.html">מדיניות פרטיות</a>
+    <a href="terms.html">תנאי שימוש</a>
+    <a href="accessibility.html">הצהרת נגישות</a>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgTitle"><form method="dialog" id="dlgForm">
+  <div class="dlg-head" id="dlgTitle"></div>
+  <div class="dlg-body" id="dlgBody"></div>
+  <div class="err" id="dlgErr" role="alert" style="padding:0 18px"></div>
+  <div class="dlg-foot">
+    <button class="btn primary" id="dlgOk" value="ok">שמירה</button>
+    <button class="btn" value="cancel" formnovalidate>ביטול</button>
+  </div>
+</form></dialog>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD0-ec8_WBWyiOmvfNgu6Dqv4hnLZv7mdc",
+  authDomain: "next1-inventory.firebaseapp.com",
+  projectId: "next1-inventory",
+  storageBucket: "next1-inventory.firebasestorage.app",
+  messagingSenderId: "3600748330",
+  appId: "1:3600748330:web:0e549cf6b38f7acae65853"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+const TS = () => firebase.firestore.FieldValue.serverTimestamp();
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const r6 = n => Math.round(n * 1e6) / 1e6;
+const fmtN = n => (Math.round((n || 0) * 1000) / 1000).toLocaleString('he-IL');
+const fmtM = n => '₪' + (n || 0).toLocaleString('he-IL', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const today = () => new Date().toLocaleDateString('en-CA');
+const TYPE_LABEL = {in: 'קבלה', out: 'הוצאה', transfer: 'העברה', adjust: 'ספירה'};
+
+let uid = null, userEmail = '';
+let items = {}, whs = {}, stock = {}, moves = [];
+let unsubs = [];
+
+const U = () => db.collection('users').doc(uid);
+const stockId = (itemId, whId) => itemId + '__' + whId;
+const stockRef = (itemId, whId) => U().collection('stock').doc(stockId(itemId, whId));
+
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ---------- Auth ---------- */
+auth.onAuthStateChanged(user => {
+  unsubs.forEach(u => u()); unsubs = [];
+  if (!user) {
+    uid = null; $('app').classList.add('hidden'); $('login').classList.remove('hidden'); return;
+  }
+  uid = user.uid; userEmail = user.email || '';
+  $('who').textContent = userEmail;
+  $('login').classList.add('hidden'); $('app').classList.remove('hidden');
+  listen();
+});
+
+$('loginForm').addEventListener('submit', async e => {
+  e.preventDefault(); $('lErr').textContent = '';
+  try { await auth.signInWithEmailAndPassword($('lEmail').value.trim(), $('lPass').value); }
+  catch (err) { $('lErr').textContent = 'אימייל או סיסמה שגויים'; }
+});
+$('forgotBtn').addEventListener('click', async () => {
+  const email = $('lEmail').value.trim();
+  if (!email) { $('lErr').textContent = 'יש להזין אימייל קודם'; return; }
+  try { await auth.sendPasswordResetEmail(email); $('lErr').textContent = ''; toast('נשלח מייל לאיפוס סיסמה'); }
+  catch { $('lErr').textContent = 'לא ניתן לשלוח מייל איפוס'; }
+});
+$('logoutBtn').addEventListener('click', () => auth.signOut());
+
+/* ---------- Data ---------- */
+function listen() {
+  const err = e => { console.error(e); toast('שגיאת חיבור לנתונים'); };
+  unsubs.push(U().collection('items').onSnapshot(s => {
+    items = {}; s.forEach(d => items[d.id] = {id: d.id, ...d.data()}); renderAll();
+  }, err));
+  unsubs.push(U().collection('warehouses').onSnapshot(s => {
+    whs = {}; s.forEach(d => whs[d.id] = {id: d.id, ...d.data()}); renderWhSelects(); renderAll();
+  }, err));
+  unsubs.push(U().collection('stock').onSnapshot(s => {
+    stock = {}; s.forEach(d => stock[d.id] = d.data()); renderAll();
+  }, err));
+  unsubs.push(U().collection('movements').orderBy('at', 'desc').limit(1000).onSnapshot(s => {
+    moves = []; s.forEach(d => moves.push({id: d.id, ...d.data()})); renderMoves();
+  }, err));
+}
+
+const sortedItems = () => Object.values(items).sort((a, b) => a.name.localeCompare(b.name, 'he'));
+const sortedWhs = () => Object.values(whs).sort((a, b) => a.name.localeCompare(b.name, 'he'));
+const qtyIn = (itemId, whId) => (stock[stockId(itemId, whId)] || {}).qty || 0;
+const isLow = it => (it.minQty || 0) > 0 && (it.totalQty || 0) < it.minQty;
+
+/* ---------- Render ---------- */
+function renderAll() { renderStock(); renderItems(); renderWhs(); renderMoves(); }
+
+function renderWhSelects() {
+  const list = sortedWhs();
+  for (const id of ['sWh', 'mWh']) {
+    const sel = $(id), cur = sel.value;
+    sel.innerHTML = '<option value="">כל המחסנים</option>' + list.map(w => `<option value="${w.id}">${esc(w.name)}</option>`).join('');
+    sel.value = whs[cur] ? cur : '';
+  }
+}
+
+function stockRows() {
+  const wh = $('sWh').value;
+  return sortedItems().map(it => {
+    const qty = wh ? qtyIn(it.id, wh) : (it.totalQty || 0);
+    return {it, qty, value: qty * (it.avgCost || 0)};
+  });
+}
+
+function renderStock() {
+  const wh = $('sWh').value, q = $('sSearch').value.trim().toLowerCase(), onlyLow = $('sLow').checked;
+  const all = stockRows();
+  const totalValue = all.reduce((s, r) => s + r.value, 0);
+  const lowCount = Object.values(items).filter(isLow).length;
+  $('cValue').textContent = fmtM(totalValue);
+  $('cItems').textContent = all.filter(r => r.qty > 0).length.toLocaleString('he-IL');
+  $('cLow').textContent = lowCount;
+  $('cLowCard').classList.toggle('alert', lowCount > 0);
+  $('cWhs').textContent = Object.keys(whs).length;
+
+  const rows = all.filter(r => {
+    if (onlyLow && !isLow(r.it)) return false;
+    if (wh && r.qty === 0) return false;
+    if (q && !`${r.it.name} ${r.it.sku || ''} ${r.it.category || ''}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if (!rows.length) {
+    $('stockBody').innerHTML = `<tr><td colspan="8" class="empty">${Object.keys(items).length ? 'אין פריטים תואמים' : 'עדיין אין פריטים. הוסף פריטים בלשונית "פריטים" או ייבא מאקסל.'}</td></tr>`;
+    return;
+  }
+  $('stockBody').innerHTML = rows.map(({it, qty, value}) => {
+    const low = isLow(it);
+    let breakdown = '';
+    if (!wh) {
+      const parts = sortedWhs().map(w => [w, qtyIn(it.id, w.id)]).filter(([, n]) => n !== 0);
+      if (parts.length > 1) breakdown = `<div class="sub">${parts.map(([w, n]) => `${esc(w.name)}: ${fmtN(n)}`).join(' · ')}</div>`;
+      else if (parts.length === 1) breakdown = `<div class="sub">${esc(parts[0][0].name)}</div>`;
+    }
+    return `<tr class="${low ? 'low' : ''}">
+      <td class="wrap">${esc(it.name)}${breakdown}</td><td>${esc(it.sku)}</td><td>${esc(it.category)}</td>
+      <td class="num">${fmtN(qty)}</td><td>${esc(it.unit)}</td>
+      <td class="num">${fmtM(it.avgCost)}</td><td class="num">${fmtM(value)}</td>
+      <td>${low ? `<span class="tag low">חסר · מינ׳ ${fmtN(it.minQty)}</span>` : (it.minQty ? '<span class="tag ok">תקין</span>' : '')}</td></tr>`;
+  }).join('');
+}
+
+function renderItems() {
+  const q = $('iSearch').value.trim().toLowerCase();
+  const list = sortedItems().filter(it => !q || `${it.name} ${it.sku || ''} ${it.category || ''}`.toLowerCase().includes(q));
+  if (!list.length) { $('itemsBody').innerHTML = `<tr><td colspan="8" class="empty">${q ? 'אין פריטים תואמים' : 'אין פריטים עדיין'}</td></tr>`; return; }
+  $('itemsBody').innerHTML = list.map(it => `<tr>
+    <td class="wrap">${esc(it.name)}</td><td>${esc(it.sku)}</td><td>${esc(it.category)}</td><td>${esc(it.unit)}</td>
+    <td class="num">${it.minQty ? fmtN(it.minQty) : ''}</td><td class="num">${fmtM(it.avgCost)}</td><td class="num">${fmtN(it.totalQty)}</td>
+    <td><div class="row-actions"><button class="btn link" data-edit-item="${it.id}">עריכה</button><button class="btn link danger" data-del-item="${it.id}">מחיקה</button></div></td></tr>`).join('');
+}
+
+function renderWhs() {
+  const list = sortedWhs();
+  if (!list.length) { $('whsBody').innerHTML = '<tr><td colspan="5" class="empty">אין מחסנים עדיין. התחל בהוספת מחסן.</td></tr>'; return; }
+  $('whsBody').innerHTML = list.map(w => {
+    let count = 0, value = 0;
+    for (const it of Object.values(items)) { const n = qtyIn(it.id, w.id); if (n) { count++; value += n * (it.avgCost || 0); } }
+    return `<tr><td>${esc(w.name)}</td><td class="wrap">${esc(w.note)}</td><td class="num">${count}</td><td class="num">${fmtM(value)}</td>
+      <td><div class="row-actions"><button class="btn link" data-edit-wh="${w.id}">עריכה</button><button class="btn link danger" data-del-wh="${w.id}">מחיקה</button></div></td></tr>`;
+  }).join('');
+}
+
+function moveWhText(m) {
+  if (m.type === 'transfer') return `${esc(m.whName)} ← ${esc(m.toName)}`;
+  return esc(m.whName);
+}
+function filteredMoves() {
+  const t = $('mType').value, wh = $('mWh').value, q = $('mSearch').value.trim().toLowerCase();
+  return moves.filter(m => (!t || m.type === t) && (!wh || m.whId === wh || m.toId === wh) &&
+    (!q || `${m.itemName} ${m.sku || ''} ${m.note || ''}`.toLowerCase().includes(q)));
+}
+function renderMoves() {
+  const list = filteredMoves();
+  if (!list.length) { $('movesBody').innerHTML = '<tr><td colspan="8" class="empty">אין תנועות</td></tr>'; return; }
+  $('movesBody').innerHTML = list.map(m => {
+    const sign = m.type === 'out' ? -1 : 1;
+    const qty = m.qty * sign;
+    const qtyTxt = m.type === 'adjust' ? `${qty > 0 ? '+' : ''}${fmtN(qty)}<div class="sub">${fmtN(m.before)} → ${fmtN(m.counted)}</div>` : fmtN(qty);
+    return `<tr><td>${esc(m.date)}</td><td><span class="tag ${m.type}">${TYPE_LABEL[m.type]}</span></td>
+      <td class="wrap">${esc(m.itemName)}</td><td>${moveWhText(m)}</td><td class="num">${qtyTxt}</td>
+      <td class="num">${fmtM(m.unitCost)}</td><td class="num">${fmtM(Math.abs(m.qty * m.unitCost))}</td><td class="wrap">${esc(m.note)}</td></tr>`;
+  }).join('');
+}
+
+/* ---------- Tabs / filters ---------- */
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.setAttribute('aria-selected', x === b));
+  document.querySelectorAll('[role=tabpanel]').forEach(p => p.classList.toggle('hidden', p.id !== 'tab-' + b.dataset.tab));
+}));
+['sWh', 'sSearch', 'sLow'].forEach(id => $(id).addEventListener('input', renderStock));
+$('iSearch').addEventListener('input', renderItems);
+['mType', 'mWh', 'mSearch'].forEach(id => $(id).addEventListener('input', renderMoves));
+
+/* ---------- Dialog ---------- */
+let dlgSubmit = null;
+function openDlg(title, html, onSubmit, okLabel = 'שמירה') {
+  $('dlgTitle').textContent = title; $('dlgBody').innerHTML = html; $('dlgErr').textContent = '';
+  $('dlgOk').textContent = okLabel; dlgSubmit = onSubmit;
+  $('dlg').showModal();
+  const first = $('dlgBody').querySelector('input,select'); if (first) first.focus();
+}
+$('dlgForm').addEventListener('submit', async e => {
+  if (e.submitter && e.submitter.value === 'cancel') return;
+  e.preventDefault();
+  $('dlgOk').disabled = true;
+  try { await dlgSubmit(); $('dlg').close(); }
+  catch (err) { console.error(err); $('dlgErr').textContent = err.message || 'שגיאה'; }
+  finally { $('dlgOk').disabled = false; }
+});
+const val = id => $(id).value.trim();
+const num = id => { const v = parseFloat($(id).value); return isNaN(v) ? 0 : v; };
+const field = (id, label, input) => `<div class="field"><label for="${id}">${label}</label>${input}</div>`;
+
+/* ---------- Warehouses ---------- */
+function editWh(id) {
+  const w = id ? whs[id] : {name: '', note: ''};
+  openDlg(id ? 'עריכת מחסן' : 'מחסן חדש',
+    field('fWhName', 'שם המחסן', `<input id="fWhName" required value="${esc(w.name)}">`) +
+    field('fWhNote', 'מיקום / הערה', `<input id="fWhNote" value="${esc(w.note)}">`),
+    async () => {
+      const name = val('fWhName');
+      if (Object.values(whs).some(x => x.id !== id && x.name === name)) throw new Error('כבר קיים מחסן בשם הזה');
+      const data = {name, note: val('fWhNote')};
+      if (id) {
+        await U().collection('warehouses').doc(id).update(data);
+      } else await U().collection('warehouses').add({...data, createdAt: TS()});
+      toast('המחסן נשמר');
+    });
+}
+async function delWh(id) {
+  const has = Object.values(items).some(it => qtyIn(it.id, id) !== 0);
+  if (has) { toast('יש מלאי במחסן — יש להעביר או לאפס אותו לפני מחיקה'); return; }
+  if (!confirm(`למחוק את המחסן "${whs[id].name}"?`)) return;
+  const batch = db.batch();
+  Object.keys(stock).filter(k => k.endsWith('__' + id)).forEach(k => batch.delete(U().collection('stock').doc(k)));
+  batch.delete(U().collection('warehouses').doc(id));
+  await batch.commit(); toast('המחסן נמחק');
+}
+$('addWhBtn').addEventListener('click', () => editWh(null));
+$('whsBody').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.editWh) editWh(b.dataset.editWh);
+  if (b.dataset.delWh) delWh(b.dataset.delWh);
+});
+
+/* ---------- Items ---------- */
+function editItem(id) {
+  const it = id ? items[id] : {name: '', sku: '', unit: 'יח׳', category: '', minQty: 0, avgCost: 0};
+  openDlg(id ? 'עריכת פריט' : 'פריט חדש',
+    field('fName', 'שם הפריט', `<input id="fName" required value="${esc(it.name)}">`) +
+    `<div class="grid2">` +
+    field('fSku', 'מק״ט', `<input id="fSku" value="${esc(it.sku)}">`) +
+    field('fCat', 'קטגוריה', `<input id="fCat" value="${esc(it.category)}" list="catList"><datalist id="catList">${[...new Set(Object.values(items).map(x => x.category).filter(Boolean))].map(c => `<option value="${esc(c)}">`).join('')}</datalist>`) +
+    field('fUnit', 'יחידת מידה', `<input id="fUnit" value="${esc(it.unit)}" placeholder="יח׳ / ק״ג / מטר">`) +
+    field('fMin', 'כמות מינימום (התראה)', `<input id="fMin" type="number" step="any" min="0" value="${it.minQty || ''}">`) +
+    `</div>` +
+    (id ? field('fAvg', 'עלות ממוצעת ליחידה (₪) — מתעדכנת אוטומטית בכל קבלה', `<input id="fAvg" type="number" step="any" min="0" value="${it.avgCost || 0}">`) : ''),
+    async () => {
+      const data = {name: val('fName'), sku: val('fSku'), category: val('fCat'), unit: val('fUnit'), minQty: num('fMin')};
+      if (data.sku && Object.values(items).some(x => x.id !== id && x.sku === data.sku)) throw new Error('מק״ט כבר קיים בפריט אחר');
+      if (id) { data.avgCost = num('fAvg'); await U().collection('items').doc(id).update(data); }
+      else await U().collection('items').add({...data, avgCost: 0, totalQty: 0, createdAt: TS()});
+      toast('הפריט נשמר');
+    });
+}
+async function delItem(id) {
+  const it = items[id];
+  if ((it.totalQty || 0) !== 0) { toast('לפריט יש מלאי — יש לאפס אותו בספירה לפני מחיקה'); return; }
+  if (!confirm(`למחוק את הפריט "${it.name}"? היסטוריית התנועות תישמר.`)) return;
+  const batch = db.batch();
+  Object.keys(stock).filter(k => k.startsWith(id + '__')).forEach(k => batch.delete(U().collection('stock').doc(k)));
+  batch.delete(U().collection('items').doc(id));
+  await batch.commit(); toast('הפריט נמחק');
+}
+$('addItemBtn').addEventListener('click', () => editItem(null));
+$('itemsBody').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.editItem) editItem(b.dataset.editItem);
+  if (b.dataset.delItem) delItem(b.dataset.delItem);
+});
+
+/* ---------- Movements ---------- */
+async function doMove(m) {
+  const itemRef = U().collection('items').doc(m.itemId);
+  await db.runTransaction(async t => {
+    const itS = await t.get(itemRef);
+    if (!itS.exists) throw new Error('הפריט לא נמצא');
+    const it = itS.data();
+    const sRef = stockRef(m.itemId, m.whId);
+    const sS = await t.get(sRef);
+    const cur = sS.exists ? sS.data().qty || 0 : 0;
+    let toRef, toCur = 0;
+    if (m.type === 'transfer') {
+      toRef = stockRef(m.itemId, m.toId);
+      const tS = await t.get(toRef); toCur = tS.exists ? tS.data().qty || 0 : 0;
+    }
+    let total = it.totalQty || 0, avg = it.avgCost || 0;
+    const rec = {
+      type: m.type, itemId: m.itemId, itemName: it.name, sku: it.sku || '',
+      whId: m.whId, whName: whs[m.whId].name, qty: m.qty, note: m.note || '',
+      date: m.date, at: TS(), by: userEmail
+    };
+    if (m.type === 'in') {
+      const base = Math.max(0, total);
+      avg = base + m.qty > 0 ? (base * avg + m.qty * m.unitCost) / (base + m.qty) : m.unitCost;
+      total += m.qty;
+      t.set(sRef, {itemId: m.itemId, whId: m.whId, qty: r6(cur + m.qty)});
+      rec.unitCost = m.unitCost;
+    } else if (m.type === 'out' || m.type === 'transfer') {
+      if (m.qty > cur + 1e-9) throw new Error(`במחסן ${whs[m.whId].name} יש רק ${fmtN(cur)} ${it.unit || ''}`);
+      t.set(sRef, {itemId: m.itemId, whId: m.whId, qty: r6(cur - m.qty)});
+      if (m.type === 'out') total -= m.qty;
+      else {
+        t.set(toRef, {itemId: m.itemId, whId: m.toId, qty: r6(toCur + m.qty)});
+        rec.toId = m.toId; rec.toName = whs[m.toId].name;
+      }
+      rec.unitCost = avg;
+    } else if (m.type === 'adjust') {
+      const diff = r6(m.counted - cur);
+      if (diff === 0) throw new Error('הכמות שנספרה זהה לכמות במערכת');
+      t.set(sRef, {itemId: m.itemId, whId: m.whId, qty: r6(m.counted)});
+      total += diff;
+      Object.assign(rec, {qty: diff, before: cur, counted: m.counted, unitCost: avg});
+    }
+    t.update(itemRef, {totalQty: r6(total), avgCost: r6(avg)});
+    t.set(U().collection('movements').doc(), rec);
+  });
+}
+
+function openMove(type) {
+  if (!Object.keys(whs).length) { toast('יש להוסיף מחסן קודם'); return; }
+  if (!Object.keys(items).length) { toast('יש להוסיף פריט קודם'); return; }
+  if (type === 'transfer' && Object.keys(whs).length < 2) { toast('להעברה צריך לפחות שני מחסנים'); return; }
+  const itemOpts = sortedItems().map(it => `<option value="${it.id}">${esc(it.name)}${it.sku ? ' · ' + esc(it.sku) : ''}</option>`).join('');
+  const whOpts = sortedWhs().map(w => `<option value="${w.id}">${esc(w.name)}</option>`).join('');
+  const defWh = $('sWh').value;
+  const titles = {in: 'קבלה למלאי', out: 'הוצאה מהמלאי', transfer: 'העברה בין מחסנים', adjust: 'ספירת מלאי'};
+  let html = `<div class="hint" id="mvHint"></div>` + field('mvItem', 'פריט', `<select id="mvItem" required>${itemOpts}</select>`);
+  if (type === 'transfer') {
+    html += `<div class="grid2">` + field('mvWh', 'ממחסן', `<select id="mvWh">${whOpts}</select>`) +
+      field('mvTo', 'למחסן', `<select id="mvTo">${whOpts}</select>`) + `</div>`;
+  } else html += field('mvWh', 'מחסן', `<select id="mvWh">${whOpts}</select>`);
+  html += `<div class="grid2">`;
+  if (type === 'adjust') html += field('mvQty', 'כמות שנספרה בפועל', `<input id="mvQty" type="number" step="any" min="0" required>`);
+  else html += field('mvQty', 'כמות', `<input id="mvQty" type="number" step="any" min="0.001" required>`);
+  if (type === 'in') html += field('mvCost', 'עלות ליחידה (₪)', `<input id="mvCost" type="number" step="any" min="0" required>`);
+  html += field('mvDate', 'תאריך', `<input id="mvDate" type="date" required value="${today()}">`) + `</div>`;
+  html += field('mvNote', type === 'in' ? 'ספק / מס׳ חשבונית / הערה' : 'הערה', `<input id="mvNote">`);
+
+  openDlg(titles[type], html, async () => {
+    const m = {type, itemId: $('mvItem').value, whId: $('mvWh').value, date: $('mvDate').value, note: val('mvNote')};
+    if (type === 'adjust') m.counted = num('mvQty'); else m.qty = num('mvQty');
+    if (type !== 'adjust' && !(m.qty > 0)) throw new Error('יש להזין כמות חיובית');
+    if (type === 'in') m.unitCost = num('mvCost');
+    if (type === 'transfer') { m.toId = $('mvTo').value; if (m.toId === m.whId) throw new Error('יש לבחור מחסן יעד שונה'); }
+    await doMove(m);
+    toast(titles[type] + ' נשמרה');
+  }, 'ביצוע');
+
+  if (defWh) $('mvWh').value = defWh;
+  if (type === 'transfer') { const other = sortedWhs().find(w => w.id !== $('mvWh').value); $('mvTo').value = other.id; }
+  const update = () => {
+    const it = items[$('mvItem').value]; if (!it) return;
+    const cur = qtyIn(it.id, $('mvWh').value);
+    let h = `במחסן: <b>${fmtN(cur)}</b> ${esc(it.unit)} · סה״כ בכל המחסנים: ${fmtN(it.totalQty)} · עלות ממוצעת: ${fmtM(it.avgCost)}`;
+    if (type === 'transfer') h += ` · ביעד: ${fmtN(qtyIn(it.id, $('mvTo').value))}`;
+    $('mvHint').innerHTML = h;
+    if (type === 'in' && document.activeElement !== $('mvCost') && !$('mvCost').dataset.touched) $('mvCost').value = it.avgCost ? r6(it.avgCost) : '';
+  };
+  ['mvItem', 'mvWh', 'mvTo'].forEach(id => $(id) && $(id).addEventListener('change', update));
+  if (type === 'in') $('mvCost').addEventListener('input', () => $('mvCost').dataset.touched = '1');
+  update();
+}
+document.querySelectorAll('[data-move]').forEach(b => b.addEventListener('click', () => openMove(b.dataset.move)));
+
+/* ---------- Excel ---------- */
+const COLS = ['שם פריט', 'מק"ט', 'יחידה', 'קטגוריה', 'כמות מינימום', 'מחסן', 'כמות', 'עלות ליחידה'];
+function saveWb(sheets, name) {
+  const wb = XLSX.utils.book_new();
+  wb.Workbook = {Views: [{RTL: true}]};
+  for (const [title, rows] of sheets) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), title);
+  XLSX.writeFile(wb, `${name}-${today()}.xlsx`);
+}
+$('templateBtn').addEventListener('click', () => {
+  saveWb([['פריטים', [Object.fromEntries(COLS.map(c => [c, '']))]]], 'תבנית-פריטים');
+});
+$('exportStockBtn').addEventListener('click', () => {
+  const byWh = [];
+  for (const w of sortedWhs()) for (const it of sortedItems()) {
+    const q = qtyIn(it.id, w.id);
+    if (q) byWh.push({'מחסן': w.name, 'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'כמות': q, 'יחידה': it.unit || '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': Math.round(q * (it.avgCost || 0) * 100) / 100});
+  }
+  const summary = sortedItems().map(it => ({'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'סה"כ כמות': it.totalQty || 0, 'יחידה': it.unit || '', 'מינימום': it.minQty || 0, 'מתחת למינימום': isLow(it) ? 'כן' : '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': Math.round((it.totalQty || 0) * (it.avgCost || 0) * 100) / 100}));
+  saveWb([['סיכום פריטים', summary], ['מלאי לפי מחסן', byWh]], 'דוח-מלאי');
+});
+$('exportMovesBtn').addEventListener('click', () => {
+  const rows = filteredMoves().map(m => ({'תאריך': m.date, 'סוג': TYPE_LABEL[m.type], 'פריט': m.itemName, 'מק"ט': m.sku || '', 'ממחסן': m.whName, 'למחסן': m.toName || '', 'כמות': m.type === 'out' ? -m.qty : m.qty, 'עלות ליחידה': r6(m.unitCost || 0), 'שווי': Math.round(Math.abs(m.qty * m.unitCost) * 100) / 100, 'הערה': m.note || '', 'בוצע ע"י': m.by || ''}));
+  saveWb([['תנועות', rows]], 'תנועות-מלאי');
+});
+$('importBtn').addEventListener('click', () => $('importFile').click());
+$('importFile').addEventListener('change', async e => {
+  const file = e.target.files[0]; e.target.value = '';
+  if (!file) return;
+  try {
+    const wb = XLSX.read(await file.arrayBuffer());
+    const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval: ''});
+    const g = (r, ...keys) => { for (const k of keys) if (r[k] !== undefined && r[k] !== '') return String(r[k]).trim(); return ''; };
+    let created = 0, updated = 0, received = 0, skipped = 0;
+    for (const r of rows) {
+      const name = g(r, 'שם פריט', 'שם', 'פריט');
+      if (!name) { skipped++; continue; }
+      const sku = g(r, 'מק"ט', 'מק״ט', 'מקט');
+      const data = {name, sku, unit: g(r, 'יחידה') || 'יח׳', category: g(r, 'קטגוריה'), minQty: parseFloat(g(r, 'כמות מינימום', 'מינימום')) || 0};
+      let it = Object.values(items).find(x => (sku && x.sku === sku) || (!sku && x.name === name));
+      let id;
+      if (it) { id = it.id; await U().collection('items').doc(id).update(data); updated++; }
+      else {
+        const ref = await U().collection('items').add({...data, avgCost: 0, totalQty: 0, createdAt: TS()});
+        id = ref.id; items[id] = {id, ...data, avgCost: 0, totalQty: 0}; created++;
+      }
+      const qty = parseFloat(g(r, 'כמות')) || 0, whName = g(r, 'מחסן');
+      if (qty > 0 && whName) {
+        let w = Object.values(whs).find(x => x.name === whName);
+        if (!w) {
+          const ref = await U().collection('warehouses').add({name: whName, note: '', createdAt: TS()});
+          w = whs[ref.id] = {id: ref.id, name: whName, note: ''};
+        }
+        await doMove({type: 'in', itemId: id, whId: w.id, qty, unitCost: parseFloat(g(r, 'עלות ליחידה', 'עלות')) || 0, date: today(), note: 'ייבוא מאקסל'});
+        received++;
+      }
+    }
+    toast(`ייבוא הסתיים: ${created} חדשים, ${updated} עודכנו, ${received} קבלות מלאי${skipped ? `, ${skipped} שורות דולגו` : ''}`);
+  } catch (err) { console.error(err); toast('שגיאה בקריאת הקובץ'); }
+});
+
+$('yr').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
