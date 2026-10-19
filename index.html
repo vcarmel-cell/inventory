@@ -44,8 +44,8 @@
   /* app */
   header{border-bottom:1px solid var(--hairline);background:var(--wash);}
   .bar{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
-  .brand{height:46px;width:auto;display:block;margin-inline-start:auto;}
-  .who{font-size:13px;color:var(--ink-soft);}
+  .brand{height:46px;width:auto;display:block;}
+  .who{margin-inline-start:auto;font-size:13px;color:var(--ink-soft);}
   main{max-width:1120px;margin:0 auto;padding:18px 16px 40px;}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .tabs{display:flex;border-bottom:1px solid var(--hairline);margin-bottom:16px;overflow-x:auto;}
@@ -117,9 +117,9 @@
 <!-- App -->
 <div id="app" class="hidden">
   <header><div class="bar">
+    <img class="brand" src="brand-logo.png" alt="Next1 מלאי">
     <span class="who" id="who"></span>
     <button class="btn" id="logoutBtn">יציאה</button>
-    <img class="brand" src="brand-logo.png" alt="Next1 מלאי">
   </div></header>
 
   <main>
