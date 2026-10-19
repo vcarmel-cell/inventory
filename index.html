@@ -43,9 +43,9 @@
 
   /* app */
   header{border-bottom:1px solid var(--hairline);background:var(--wash);}
-  .bar{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .bar{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;}
   .brand{height:46px;width:auto;display:block;}
-  .who{margin-inline-start:auto;font-size:13px;color:var(--ink-soft);}
+  .who{margin-inline-start:auto;font-size:13px;color:var(--ink-soft);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   main{max-width:1120px;margin:0 auto;padding:18px 16px 40px;}
   .actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
   .tabs{display:flex;border-bottom:1px solid var(--hairline);margin-bottom:16px;overflow-x:auto;}
@@ -60,6 +60,8 @@
   .toolbar input,.toolbar select{width:auto;min-width:160px;flex:1 1 160px;max-width:280px;}
   .toolbar .sp{flex:1 1 0;}
   .toolbar input[type=checkbox]{flex:none;min-width:0;}
+  .toolbar .dt{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft);white-space:nowrap;}
+  .toolbar .dt input{min-width:0;width:150px;flex:none;}
   .tbl-wrap{overflow-x:auto;border:1px solid var(--hairline);border-radius:4px;}
   table{width:100%;border-collapse:collapse;font-size:14px;}
   th,td{padding:9px 12px;text-align:right;border-bottom:1px solid var(--hairline);white-space:nowrap;}
@@ -190,6 +192,11 @@
           <option value="">כל סוגי התנועות</option><option value="in">קבלה</option><option value="out">הוצאה</option><option value="transfer">העברה</option><option value="adjust">ספירה</option>
         </select>
         <select id="mWh" aria-label="מחסן"></select>
+        <select id="mRange" aria-label="טווח תאריכים">
+          <option value="">כל התאריכים</option><option value="month">החודש</option><option value="prev">חודש קודם</option><option value="year">השנה</option><option value="custom">טווח מותאם</option>
+        </select>
+        <label class="dt">מתאריך<input id="mFrom" type="date"></label>
+        <label class="dt">עד<input id="mTo" type="date"></label>
         <input id="mSearch" type="search" placeholder="חיפוש פריט / הערה" aria-label="חיפוש תנועה">
         <span class="sp"></span>
         <button class="btn" id="exportMovesBtn">ייצוא לאקסל</button>
@@ -198,7 +205,8 @@
         <thead><tr><th>תאריך</th><th>סוג</th><th>פריט</th><th>מחסן</th><th class="num">כמות</th><th class="num">עלות ליח׳</th><th class="num">שווי</th><th>הערה</th></tr></thead>
         <tbody id="movesBody"></tbody>
       </table></div>
-      <p class="sub">מוצגות 1,000 התנועות האחרונות. תנועות אינן נמחקות — תיקון מבצעים בספירת מלאי.</p>
+      <p class="sub" id="mNote"></p>
+      <p class="sub">תנועות אינן נמחקות — תיקון מבצעים בספירת מלאי. הייצוא לאקסל כולל את התנועות בסינון הנוכחי, וגיליון סיכום לפי פריט לתקופה.</p>
     </section>
   </main>
 
@@ -294,9 +302,41 @@ function listen() {
   unsubs.push(U().collection('stock').onSnapshot(s => {
     stock = {}; s.forEach(d => stock[d.id] = d.data()); renderAll();
   }, err));
-  unsubs.push(U().collection('movements').orderBy('at', 'desc').limit(1000).onSnapshot(s => {
-    moves = []; s.forEach(d => moves.push({id: d.id, ...d.data()})); renderMoves();
-  }, err));
+  listenMoves();
+}
+
+/* Movements: no date range → latest MOVES_LIMIT; with a range → everything in it */
+const MOVES_LIMIT = 1000;
+let unsubMoves = null;
+const byDateDesc = (a, b) => (b.date || '').localeCompare(a.date || '') ||
+  ((b.at && b.at.seconds) || 9e12) - ((a.at && a.at.seconds) || 9e12);
+function movesQuery() {
+  const from = $('mFrom').value, to = $('mTo').value;
+  let q = U().collection('movements');
+  if (!from && !to) return q.orderBy('at', 'desc').limit(MOVES_LIMIT);
+  if (from) q = q.where('date', '>=', from);
+  if (to) q = q.where('date', '<=', to);
+  return q.orderBy('date', 'desc');
+}
+function listenMoves() {
+  if (unsubMoves) { unsubMoves(); unsubs = unsubs.filter(u => u !== unsubMoves); }
+  unsubMoves = movesQuery().onSnapshot(s => {
+    moves = []; s.forEach(d => moves.push({id: d.id, ...d.data()})); moves.sort(byDateDesc); renderMoves();
+  }, e => { console.error(e); toast('שגיאה בטעינת תנועות'); });
+  unsubs.push(unsubMoves);
+}
+const pad = n => String(n).padStart(2, '0');
+const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dmy = s => s.split('-').reverse().join('/');
+function applyRange() {
+  const r = $('mRange').value, d = new Date(), y = d.getFullYear(), mo = d.getMonth();
+  const set = (a, b) => { $('mFrom').value = a; $('mTo').value = b; };
+  if (r === '') set('', '');
+  else if (r === 'month') set(ymd(new Date(y, mo, 1)), ymd(new Date(y, mo + 1, 0)));
+  else if (r === 'prev') set(ymd(new Date(y, mo - 1, 1)), ymd(new Date(y, mo, 0)));
+  else if (r === 'year') set(`${y}-01-01`, `${y}-12-31`);
+  else { $('mFrom').focus(); return; }
+  listenMoves();
 }
 
 const sortedItems = () => Object.values(items).sort((a, b) => a.name.localeCompare(b.name, 'he'));
@@ -392,7 +432,10 @@ function filteredMoves() {
     (!q || `${m.itemName} ${m.sku || ''} ${m.note || ''}`.toLowerCase().includes(q)));
 }
 function renderMoves() {
-  const list = filteredMoves();
+  const list = filteredMoves(), from = $('mFrom').value, to = $('mTo').value;
+  $('mNote').textContent = (from || to)
+    ? `${list.length.toLocaleString('he-IL')} תנועות${from ? ' מ־' + dmy(from) : ''}${to ? ' עד ' + dmy(to) : ''}`
+    : `מוצגות עד ${MOVES_LIMIT.toLocaleString('he-IL')} התנועות האחרונות. לתקופה מסוימת — בחר טווח תאריכים.`;
   if (!list.length) { $('movesBody').innerHTML = '<tr><td colspan="8" class="empty">אין תנועות</td></tr>'; return; }
   $('movesBody').innerHTML = list.map(m => {
     const sign = m.type === 'out' ? -1 : 1;
@@ -412,6 +455,12 @@ document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () =>
 ['sWh', 'sSearch', 'sLow'].forEach(id => $(id).addEventListener('input', renderStock));
 $('iSearch').addEventListener('input', renderItems);
 ['mType', 'mWh', 'mSearch'].forEach(id => $(id).addEventListener('input', renderMoves));
+$('mRange').addEventListener('change', applyRange);
+['mFrom', 'mTo'].forEach(id => $(id).addEventListener('change', () => {
+  if ($('mFrom').value && $('mTo').value && $('mFrom').value > $('mTo').value) { toast('תאריך ההתחלה אחרי תאריך הסיום'); return; }
+  $('mRange').value = ($('mFrom').value || $('mTo').value) ? 'custom' : '';
+  listenMoves();
+}));
 
 /* ---------- Dialog ---------- */
 let dlgSubmit = null;
@@ -601,7 +650,7 @@ function saveWb(sheets, name) {
   const wb = XLSX.utils.book_new();
   wb.Workbook = {Views: [{RTL: true}]};
   for (const [title, rows] of sheets) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(rows), title);
-  XLSX.writeFile(wb, `${name}-${today()}.xlsx`);
+  XLSX.writeFile(wb, name + '.xlsx');
 }
 $('templateBtn').addEventListener('click', () => {
   saveWb([['פריטים', [Object.fromEntries(COLS.map(c => [c, '']))]]], 'תבנית-פריטים');
@@ -613,11 +662,34 @@ $('exportStockBtn').addEventListener('click', () => {
     if (q) byWh.push({'מחסן': w.name, 'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'כמות': q, 'יחידה': it.unit || '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': Math.round(q * (it.avgCost || 0) * 100) / 100});
   }
   const summary = sortedItems().map(it => ({'פריט': it.name, 'מק"ט': it.sku || '', 'קטגוריה': it.category || '', 'סה"כ כמות': it.totalQty || 0, 'יחידה': it.unit || '', 'מינימום': it.minQty || 0, 'מתחת למינימום': isLow(it) ? 'כן' : '', 'עלות ממוצעת': r6(it.avgCost || 0), 'שווי': Math.round((it.totalQty || 0) * (it.avgCost || 0) * 100) / 100}));
-  saveWb([['סיכום פריטים', summary], ['מלאי לפי מחסן', byWh]], 'דוח-מלאי');
+  saveWb([['סיכום פריטים', summary], ['מלאי לפי מחסן', byWh]], 'דוח-מלאי-' + today());
 });
 $('exportMovesBtn').addEventListener('click', () => {
-  const rows = filteredMoves().map(m => ({'תאריך': m.date, 'סוג': TYPE_LABEL[m.type], 'פריט': m.itemName, 'מק"ט': m.sku || '', 'ממחסן': m.whName, 'למחסן': m.toName || '', 'כמות': m.type === 'out' ? -m.qty : m.qty, 'עלות ליחידה': r6(m.unitCost || 0), 'שווי': Math.round(Math.abs(m.qty * m.unitCost) * 100) / 100, 'הערה': m.note || '', 'בוצע ע"י': m.by || ''}));
-  saveWb([['תנועות', rows]], 'תנועות-מלאי');
+  const list = filteredMoves(), from = $('mFrom').value, to = $('mTo').value, wh = $('mWh').value;
+  if (!list.length) { toast('אין תנועות לייצוא בסינון הנוכחי'); return; }
+  const money = n => Math.round(n * 100) / 100;
+  const rows = list.map(m => ({'תאריך': m.date, 'סוג': TYPE_LABEL[m.type], 'פריט': m.itemName, 'מק"ט': m.sku || '', 'ממחסן': m.whName, 'למחסן': m.toName || '', 'כמות': m.type === 'out' ? -m.qty : m.qty, 'עלות ליחידה': r6(m.unitCost || 0), 'שווי': money(Math.abs(m.qty * m.unitCost)), 'הערה': m.note || '', 'בוצע ע"י': m.by || ''}));
+  // per-item summary for the period; with a warehouse filter, transfers count as in/out of that warehouse
+  const sum = {};
+  for (const m of list) {
+    const r = sum[m.itemId] ||= {name: m.itemName, sku: m.sku || '', inQ: 0, inV: 0, outQ: 0, outV: 0, trQ: 0, trIn: 0, trOut: 0, adjQ: 0, adjV: 0};
+    const v = m.qty * (m.unitCost || 0);
+    if (m.type === 'in') { r.inQ += m.qty; r.inV += v; }
+    else if (m.type === 'out') { r.outQ += m.qty; r.outV += v; }
+    else if (m.type === 'adjust') { r.adjQ += m.qty; r.adjV += v; }
+    else if (m.type === 'transfer') { r.trQ += m.qty; if (m.toId === wh) r.trIn += m.qty; if (m.whId === wh) r.trOut += m.qty; }
+  }
+  const summary = Object.entries(sum).sort((a, b) => a[1].name.localeCompare(b[1].name, 'he')).map(([id, r]) => {
+    const row = {'פריט': r.name, 'מק"ט': r.sku, 'יחידה': (items[id] || {}).unit || '',
+      'כמות שהתקבלה': r6(r.inQ), 'שווי קבלות': money(r.inV), 'כמות שהוצאה': r6(r.outQ), 'שווי הוצאות': money(r.outV)};
+    if (wh) { row['העברות נכנסות'] = r6(r.trIn); row['העברות יוצאות'] = r6(r.trOut); }
+    else row['הועבר בין מחסנים'] = r6(r.trQ);
+    row['תיקוני ספירה'] = r6(r.adjQ); row['שווי תיקוני ספירה'] = money(r.adjV);
+    row['שינוי נטו בכמות'] = r6(r.inQ - r.outQ + r.adjQ + (wh ? r.trIn - r.trOut : 0));
+    return row;
+  });
+  const range = from || to ? `${from || 'התחלה'}-עד-${to || today()}` : 'עד-' + today();
+  saveWb([['סיכום לפי פריט', summary], ['תנועות', rows]], `תנועות-מלאי-${range}${wh ? '-' + whs[wh].name : ''}`);
 });
 $('importBtn').addEventListener('click', () => $('importFile').click());
 $('importFile').addEventListener('change', async e => {
